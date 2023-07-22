@@ -16,17 +16,4 @@ export class AdminComponent {
     {name: 'Auswertung Spiele', link: './result'},
   ]
 
-  constructor(private rest: RestService,
-              private service: ContentService) {
-    this.rest.getGames().subscribe({
-      next(games) {
-        console.log('test1:', games)
-      }
-    })
-
-    this.service.getGames().then(value => {
-      console.log('test5: ', value)
-    })
-  }
-
 }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {Activity} from "../model/models";
+import {Activity} from "../model/objects";
 import {Router} from "@angular/router";
 import {ContentService} from "../content.service";
 

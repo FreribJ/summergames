@@ -1,7 +1,7 @@
 module.exports = async function (app) {
     app.get('/checkLogin', async function (req, res) {
 
-        res.json({ success: true, admin: req.session.admin }).end();
+        res.json({ success: true, admin: req.session.admin, easterEggs: req.session.easterEggs }).end();
     })
 
     app.get('/teams', async function (req, res) {
@@ -49,7 +49,6 @@ module.exports = async function (app) {
         app.get('connection').query(`insert into activity (id_game, id_team1, id_team2, id_winner) values (${id_game}, ${id_team1}, ${id_team2}, ${id_winner});`, function (err, result) {
             if (err)
                 res.status(500).json(err).end()
-            console.log(result)
             res.json(result).end()
         })
     })
@@ -58,9 +57,6 @@ module.exports = async function (app) {
         const id = req.params.id
         const id_winner = req.body.winnerId
         const id_team = req.session.id_team
-        //TODO: ergänzne, dass man nur einmal was eintragen kann
-        //TODO: ergänzen, dass man nur pläne bearbeiten kann
-        //TODO: ergänzen, dass man nur activitäten wo man selber drin ist bearbeiten kann: ... and (id_team1 = ${id_team) or id_team2 = ${id_team})
         app.get('connection').query(`update activity set id_winner = ${id_winner} where id = ${id} and id_winner is null and plan = 1;`, function (err, result) {
             if (err)
                 res.status(500).json(err).end()
@@ -105,9 +101,12 @@ module.exports = async function (app) {
         // const timestamp = new Date()
         //TODO: add timestamp
         app.get('connection').query(`insert into easteregg (id, id_team) values (${id}, ${id_team});`, function (err, result) {
-            if (err)
-                res.status(500).json(err).end()
-            console.log(result)
+            if (err) {
+                if (err.errno == 1062)
+                    res.status(409).json({message: 'EasterEgg already found'}).end()
+                else
+                    res.status(500).json(err).end()
+            }
             res.json(result).end()
         })
     })

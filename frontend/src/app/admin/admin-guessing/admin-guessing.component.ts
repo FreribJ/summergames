@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {ContentService} from "../../content.service";
-import {Guess, Team} from "../../model/models";
+import {AdminGuess} from "../../model/adminObjects";
 
 @Component({
   selector: 'app-admin-guessing',
@@ -9,11 +9,11 @@ import {Guess, Team} from "../../model/models";
 })
 export class AdminGuessingComponent {
 
-  guesses: Guess[] = []
+  guesses: AdminGuess[] = []
   actual?: number
 
   constructor(private service: ContentService) {
-    this.service.getAllGuess().subscribe(result => {
+    this.service.getAdminGuesses().subscribe(result => {
       this.guesses = result
     })
   }

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {ContentService} from "../../content.service";
-import {Activity, AdminActivity, Team} from "../../model/models";
+import {Activity, Team} from "../../model/objects";
+import {AdminActivity} from "../../model/adminObjects";
 
 interface TeamResult extends Team {
   wins: number
@@ -38,7 +39,7 @@ export class AdminActivityResultComponent {
   constructor(private service: ContentService) {
     // TODO: implement method:
     // this.service.getAcceptEntries()
-    service.getAllActivities().subscribe(value => {
+    service.getAdminActivities().subscribe(value => {
       this.activities = value
     })
     service.getTeams().then(value => {
@@ -58,7 +59,7 @@ export class AdminActivityResultComponent {
       this.teamResults.forEach(team => {
         team.wins = this.activities.filter(a => a.winner.id == team.id).length
         team.loses = this.activities.filter(a => a.winner.id != -1 && a.winner.id != team.id && (a.team1.id == team.id || a.team2.id == team.id)).length
-        team.points = team.wins - team.loses
+        team.points = team.wins * 2 - team.loses
       })
       this.teamResults.sort((a, b) => {
         if (a.points == b.points)

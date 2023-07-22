@@ -1,35 +1,52 @@
 import {Injectable} from '@angular/core';
-import {Activity, AdminActivity, Game, Guess, ROActivity, ROGuess, Team} from "./model/models";
-import {Observable} from "rxjs";
+import {Activity, Game, Team} from "./model/objects";
+import {Observable, Subscription} from "rxjs";
 import {RestService} from "./rest.service";
+import {AdminActivity, AdminGuess, AdminTeam} from "./model/adminObjects";
+import {ROActivity, ROGuess} from "./model/restObject";
+
+let games: Game[] = []
+let teams: Team[] = []
+let myTeam: Team
+let activities: Activity[] = []
 
 @Injectable({
   providedIn: 'root'
 })
 export class ContentService {
 
-  //TODO: make continuous Abfragen bei Observables mit möglichkeit von deabonnieren und evtl. nur neue laden
-
-  teams: Team[] = []
-  team: Team[] = []
-
-  private games: Game[] = []
-
-  private activities: Activity[] = []
+  activeSubscription?: Subscription
 
   constructor(private rest: RestService) {
   }
 
+  getGames(): Promise<Game[]> {
+    return new Promise<Game[]>((resolve, reject) => {
+      if (games.length > 0) {
+        resolve(games)
+      } else {
+        // const temp: Game[] = this.games
+        this.rest.getGames().subscribe({
+          next(g) {
+            games = g
+            resolve(g)
+          }, error(error) {
+            reject(error)
+          }
+        })
+      }
+    })
+  }
+
   getTeam(): Promise<Team> {
     return new Promise<Team>((resolve, reject) => {
-      if (this.team.length > 0) {
-        return resolve(this.team[0])
+      if (myTeam) {
+        resolve(myTeam)
       } else {
-        let temp = this.team
         this.rest.getTeam().subscribe({
-          next(team) {
-            resolve(team)
-            temp.push(team)
+          next(t) {
+            myTeam = t
+            resolve(t)
           },
           error(error) {
             reject(error)
@@ -41,14 +58,13 @@ export class ContentService {
 
   getTeams(): Promise<Team[]> {
     return new Promise<Team[]>((resolve, reject) => {
-      if (this.teams.length > 0) {
-        resolve(this.teams)
+      if (teams.length > 0) {
+        resolve(teams)
       } else {
-        let temp = this.teams
         this.rest.getTeams().subscribe({
-          next(teams) {
-            temp.push(...teams)
-            resolve(teams)
+          next(t) {
+            teams = t
+            resolve(t)
           },
           error(error) {
             reject(error)
@@ -58,10 +74,9 @@ export class ContentService {
     })
   }
 
-  getAllTeams(): Promise<Team[]> {
-    return new Promise<Team[]>((resolve, reject) => {
-      let temp = this.teams
-      this.rest.getAllTeams().subscribe({
+  getAdminTeams(): Promise<AdminTeam[]> {
+    return new Promise<AdminTeam[]>((resolve, reject) => {
+      this.rest.getAdminTeams().subscribe({
         next(teams) {
           resolve(teams)
         },
@@ -75,30 +90,38 @@ export class ContentService {
   getActivities(): Observable<Activity[]> {
     //TODO: continuos refresh
     return new Observable<Activity[]>(subscriber => {
-      if (this.activities.length > 0) {
-        subscriber.next(this.activities)
-      } else {
+        if (activities.length > 0)
+          subscriber.next(activities)
+
         let service = this
-        this.rest.getActivities().subscribe({
+        if (this.activeSubscription)
+          this.activeSubscription.unsubscribe()
+
+        this.activeSubscription = this.rest.getActivities().subscribe({
           next(roactivities) {
-            parseROActivities(roactivities, service).then(result => subscriber.next(result))
+            parseROActivities(roactivities, service).then(result => {
+              activities = result
+              subscriber.next(result)
+              subscriber.complete()
+            })
+          },
+          error(err) {
+            if (activities.length > 0)
+              alert('Die Verbindung zum Server wurde unterbrochen. Es gibt eventuell neue Aktivitäten. Bitte laden die Seite neu.')
+            console.error(err)
           }
         })
       }
-      // })
-      // }, 10000)
-    })
-
-    // return () => {
-    //clearInterval(interval)
-
+    )
   }
 
-  getAllActivities(): Observable<AdminActivity[]> {
+  getAdminActivities()
+    :
+    Observable<AdminActivity[]> {
     //TODO: continuos refresh
     return new Observable<AdminActivity[]>(subscriber => {
       let service = this
-      this.rest.getAllActivities().subscribe({
+      this.rest.getAdminActivities().subscribe({
         next(roactivities) {
           parseAdminROActivities(roactivities, service).then(result => subscriber.next(result))
         }
@@ -106,25 +129,8 @@ export class ContentService {
     })
   }
 
-  getGames(): Promise<Game[]> {
-    return new Promise<Game[]>((resolve, reject) => {
-      if (this.games.length > 0) {
-        resolve(this.games)
-      } else {
-        // let temp: Game[] = this.games
-        this.rest.getGames().subscribe({
-          next(games) {
-            // temp.push(...games)
-            resolve(games)
-          }, error(error) {
-            reject(error)
-          }
-        })
-      }
-    })
-  }
-
-  checkLogin(): Observable<{ admin: boolean }> {
+  checkLogin():
+    Observable<{ admin: boolean, easterEggs: number }> {
     return this.rest.getLogin()
   }
 
@@ -144,44 +150,52 @@ export class ContentService {
     return this.rest.putAdminActivity(activityId, gameId, team1Id, team2Id, winnerId)
   }
 
+  deleteAdminActivity(activityId: number) {
+    return this.rest.deleteAdminActivity(activityId)
+  }
+
   getGuess() {
     return this.rest.getGuess()
   }
 
-  putGuess(guess: number) {
+  putGuess(guess: number
+  ) {
     return this.rest.putGuess(guess)
   }
 
-  getAllGuess() {
-    return new Observable<Guess[]>(subscriber => {
+  getAdminGuesses() {
+    return new Observable<AdminGuess[]>(subscriber => {
       let service = this
       this.rest.getAllGuess().subscribe({
         next(roguesses) {
-          parseROGuess(roguesses, service).then(result => subscriber.next(result))
+          parseROAdminGuess(roguesses, service).then(result => subscriber.next(result))
         }
       })
     })
   }
+
   getFoundEastereggs() {
-    return this.rest.getFoundEastereggs()
+    return this.rest.getFoundEasterEggs()
   }
-  postEasteregg(id: number) {
-    return this.rest.postEasteregg(id)
+
+  postEasteregg(id: number
+  ) {
+    return this.rest.postEasterEgg(id)
   }
 }
 
-async function parseROGuess(roguesses: ROGuess[], service: ContentService) {
+async function parseROAdminGuess(roguesses: ROGuess[], service: ContentService) {
   let teams: Team[] = []
   await service.getTeams().then(t => teams = t)
 
   console.log(teams)
-  const result: Guess[] = []
+  const result: AdminGuess[] = []
   roguesses.forEach(g => {
     const team = teams.find(t => t.id == g.id_team)
     if (!team)
       throw Error('No team found')
 
-    const guess: Guess = {team: team, guess: g.guess}
+    const guess: AdminGuess = {team: team, guess: g.guess}
     result.push(guess)
   })
   return result
@@ -243,7 +257,15 @@ async function parseAdminROActivities(roactivites: ROActivity[], service: Conten
 
     const winner = teams.find(t => t.id == a.id_winner)
 
-    const activity: AdminActivity = {id: a.id, game: game, team1: team1, team2: team2, winner: winner ? winner : {id: -1}, plan: a.plan, ts: a.ts}
+    const activity: AdminActivity = {
+      id: a.id,
+      game: game,
+      team1: team1,
+      team2: team2,
+      winner: winner ? winner : {id: -1},
+      plan: a.plan,
+      ts: a.ts
+    }
     result.push(activity)
   })
   return result

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {Easteregg} from "../model/models";
+import {Easteregg} from "../model/objects";
 import {ContentService} from "../content.service";
 import {Router} from "@angular/router";
 
@@ -15,15 +15,17 @@ export const allEastereggs: Easteregg[] = [
 })
 export class EastereggsComponent {
 
-  foundEastereggs: Easteregg[] = allEastereggs
+  foundEastereggs: Easteregg[] = []
   typedNumber?: number
   notFound = false
 
   constructor(private service: ContentService,
               private router: Router) {
-    let subscription = this.service.getFoundEastereggs().subscribe(result => {
+    this.service.getFoundEastereggs().subscribe(result => {
       result.forEach(ee => {
-        // this.foundEastereggs.push(allEastereggs.find(eee => eee.id == ee.id))
+        let temp = allEastereggs.find(eee => eee.id == ee.id)
+        if (temp)
+          this.foundEastereggs.push(temp)
       })
     })
   }

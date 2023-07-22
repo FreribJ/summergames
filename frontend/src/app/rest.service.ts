@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {Activity, Game, ROActivity, ROGuess, Team} from "./model/models";
+import {Activity, Game, Team} from "./model/objects";
+import {AdminTeam} from "./model/adminObjects";
+import {ROActivity, ROGuess} from "./model/restObject";
 
 @Injectable({
   providedIn: 'root'
 })
 export class RestService {
 
-  BACKEND_IP = false ? "localhost" : "192.168.178.74"
+  BACKEND_IP = false ? "localhost" : "frenkersommerspiele.ddns.net"
   BACKEND_PORT = 8081
 
   constructor(private http: HttpClient) { }
@@ -25,22 +27,22 @@ export class RestService {
     return this.http.get<Game[]>(`http://${this.BACKEND_IP}:${this.BACKEND_PORT}/games`, {withCredentials:true})
   }
 
-  getAllTeams(): Observable<Team[]> {
-    return this.http.get<Team[]>(`http://${this.BACKEND_IP}:${this.BACKEND_PORT}/admin/teams`, {withCredentials:true})
+  getAdminTeams(): Observable<AdminTeam[]> {
+    return this.http.get<AdminTeam[]>(`http://${this.BACKEND_IP}:${this.BACKEND_PORT}/admin/teams`, {withCredentials:true})
   }
 
   postLogin(teamId: number, password: string): Observable<any> {
     return this.http.post<any>(`http://${this.BACKEND_IP}:${this.BACKEND_PORT}/login`, {id: teamId, password}, {withCredentials: true})
   }
 
-  getLogin(): Observable<{admin: boolean}> {
-    return this.http.get<{ admin: boolean }>(`http://${this.BACKEND_IP}:${this.BACKEND_PORT}/checkLogin`, {withCredentials:true})
+  getLogin(): Observable<{admin: boolean, easterEggs: number}> {
+    return this.http.get<{ admin: boolean, easterEggs: number }>(`http://${this.BACKEND_IP}:${this.BACKEND_PORT}/checkLogin`, {withCredentials:true})
   }
   getActivities(): Observable<ROActivity[]> {
     return this.http.get<ROActivity[]>(`http://${this.BACKEND_IP}:${this.BACKEND_PORT}/activities`, {withCredentials:true})
   }
 
-  getAllActivities(): Observable<ROActivity[]> {
+  getAdminActivities(): Observable<ROActivity[]> {
     return this.http.get<ROActivity[]>(`http://${this.BACKEND_IP}:${this.BACKEND_PORT}/admin/activities`, {withCredentials:true})
   }
 
@@ -56,6 +58,10 @@ export class RestService {
     return this.http.put<Activity>(`http://${this.BACKEND_IP}:${this.BACKEND_PORT}/admin/activity/${activityId}`, {gameId, team1Id, team2Id, winnerId}, {withCredentials:true})
   }
 
+  deleteAdminActivity(activityId: number) {
+    return this.http.delete<any>(`http://${this.BACKEND_IP}:${this.BACKEND_PORT}/admin/activity/${activityId}`, {withCredentials:true})
+  }
+
   getGuess(): Observable<number> {
     return this.http.get<number>(`http://${this.BACKEND_IP}:${this.BACKEND_PORT}/guess`, {withCredentials:true})
   }
@@ -68,12 +74,11 @@ export class RestService {
     return this.http.get<ROGuess[]>(`http://${this.BACKEND_IP}:${this.BACKEND_PORT}/admin/guess`, {withCredentials:true})
   }
 
-  getFoundEastereggs() {
-    return this.http.get<number[]>(`http://${this.BACKEND_IP}:${this.BACKEND_PORT}/eastereggs`, {withCredentials:true})
+  getFoundEasterEggs() {
+    return this.http.get<{id: number}[]>(`http://${this.BACKEND_IP}:${this.BACKEND_PORT}/eastereggs`, {withCredentials:true})
   }
-  postEasteregg(id: number) {
-    return this.http.put(`http://${this.BACKEND_IP}:${this.BACKEND_PORT}/easteregg`, {id}, {withCredentials:true})
-
+  postEasterEgg(id: number) {
+    return this.http.post(`http://${this.BACKEND_IP}:${this.BACKEND_PORT}/easteregg`, {id}, {withCredentials:true})
   }
 }
 

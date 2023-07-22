@@ -18,6 +18,8 @@ module.exports = async function (app) {
         })
     })
 
+    //TODO: get admin eastereggs
+
     app.get('/admin/activities', async function (req, res) {
         app.get('connection').query(`select * from activity;`, function (err, rows) {
             if (err)
@@ -44,6 +46,15 @@ module.exports = async function (app) {
         const id_team2 = req.body.team2Id
         const id_winner = req.body.winnerId
          app.get('connection').query(`update activity set id_game = ${id_game}, id_team1 = ${id_team1}, id_team2 = ${id_team2}, id_winner = ${id_winner} where id = ${id};`, function (err, rows) {
+            if (err)
+                res.status(500).json(err).end()
+            res.json(rows).end()
+        })
+    })
+
+    app.delete('/admin/activity/:id', async function (req, res) {
+        const id = req.params.id
+        app.get('connection').query(`delete from activity where id = ${id} and plan = 0;`, function (err, rows) {
             if (err)
                 res.status(500).json(err).end()
             res.json(rows).end()

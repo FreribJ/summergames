@@ -14,7 +14,14 @@
       <div class="modal-background" (click)="menuOpen = false"></div>
       <div class="modal-content">
         <a class="box" *ngFor="let item of menuItems" routerLink="{{item.link}}"
-           (click)="menuOpen = false">{{item.name}}</a>
+           style="display: flex; flex-direction: row; align-items: center" (click)="menuOpen = false">
+          <span class="icon is-large" style="margin-right: 1em">
+            <i class="fas {{item.icon}} fa-2x"></i>
+          </span>
+          <div class="has-text-centered">
+            <p class="subtitle">{{item.name}}</p>
+          </div>
+        </a>
       </div>
       <button class="modal-close is-large" aria-label="close" (click)="menuOpen = false"></button>
     </div>
@@ -26,20 +33,36 @@
     <div class="modal {{newOpen ? 'is-active' : ''}}" style="padding: 20pt">
       <div class="modal-background" (click)="newOpen = false"></div>
       <div class="modal-content">
+
         <a class="box" routerLink="plans"
            (click)="newOpen = false">
-          <h2 class="subtitle">Spiel vom Spielplan</h2>
-          <p>Zählt für die Team UND Cliquenwertung</p>
+          <div style="display: flex; flex-direction: row; align-items: center">
+            <span class="icon is-large" style="margin-right: 1em">
+              <i class="fas fa-table-list fa-2x"></i>
+            </span>
+            <div>
+              <h2 class="subtitle">Spiel vom Spielplan</h2>
+              <p>Zählt für die Team UND Cliquenwertung</p>
+            </div>
+          </div>
         </a>
         <a class="box" routerLink="new"
            (click)="newOpen = false">
-          <h2 class="subtitle">Freies Spiel</h2>
-          <p>Zählt NUR für die Teamwertung</p>
+          <div style="display: flex; flex-direction: row; align-items: center">
+            <span class="icon is-large" style="margin-right: 1em;">
+              <i class="fas fa-regular fa-file fa-2x"></i>
+            </span>
+            <div>
+              <h2 class="subtitle">Freies Spiel</h2>
+              <p>Zählt NUR für die Teamwertung</p>
+            </div>
+          </div>
         </a>
       </div>
       <button class="modal-close is-large" aria-label="close" (click)="newOpen = false"></button>
     </div>
   </div>
+
   <a *ngIf="loginSuccess" class="lose" style="padding-right: 20pt">
     <button class="button is-success is-rounded is-medium" (click)="newOpen = true">
         <span class="icon">

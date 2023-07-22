@@ -1,5 +1,12 @@
-<div class="box" [style]="{background: color}" >
-  <h1>{{activity.game.name}}</h1>
-  <h2>gegen: {{activity.opponent.name}} ({{activity.opponent.partner1}} & {{activity.opponent.partner2}})</h2>
+<div class="box" [style]="{background: color}">
+  <div style="display: flex; flex-direction: row; align-items: center">
+    <span class="icon is-large" style="margin-right: 1em">
+      <i class="fas {{icon}} fa-2x"></i>
+    </span>
+    <div>
+      <h1>{{activity.game.name}}</h1>
+      <h2>gegen: {{activity.opponent.name}} ({{activity.opponent.partner1}} & {{activity.opponent.partner2}})</h2>
+    </div>
+  </div>
 </div>
 

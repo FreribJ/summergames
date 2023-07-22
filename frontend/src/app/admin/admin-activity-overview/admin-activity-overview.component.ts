@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
-import {AdminActivity, Team} from "../../model/models";
+import {Team} from "../../model/objects";
 import {ContentService} from "../../content.service";
+import {AdminActivity} from "../../model/adminObjects";
 
 @Component({
   selector: 'app-admin-activity-overview',
@@ -14,7 +15,7 @@ export class AdminActivityOverviewComponent {
   search: string = ""
 
   constructor(private service: ContentService) {
-    this.service.getAllActivities().subscribe(result => {
+    this.service.getAdminActivities().subscribe(result => {
       this.allActivites = result
       this.activites = result
       this.onKeyPress()

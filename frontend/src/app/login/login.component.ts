@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import {ActivatedRoute, Router, RouterModule} from "@angular/router";
 import {ContentService} from "../content.service";
 import {Observable, Subscriber} from "rxjs";
-import {Team} from "../model/models";
+import {Team} from "../model/objects";
 import {AppComponent} from "../app.component";
 
 @Component({
@@ -36,11 +36,12 @@ export class LoginComponent {
   onLoginClick() {
     if (this.selectedTeamId){
       this.service.login(this.selectedTeamId, this.password).subscribe(value => {
-        this.router.navigate([''])
+        this.router.navigate([''],  {replaceUrl: true})
         this.app.checkLogin()
         //TODO: evtl. ContentService zurücksetzen
       },
       error => {
+        console.error(error)
         this.passwordWrong = true
         //TODO: show error
       })

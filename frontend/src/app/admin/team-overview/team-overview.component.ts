@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
-import {Guess, Team} from "../../model/models";
 import {ContentService} from "../../content.service";
+import {AdminTeam} from "../../model/adminObjects";
 
 @Component({
   selector: 'app-team-overview',
@@ -9,12 +9,12 @@ import {ContentService} from "../../content.service";
 })
 export class TeamOverviewComponent {
 
-  allTeams: Team[] = []
-  teams: Team[] = []
+  allTeams: AdminTeam[] = []
+  teams: AdminTeam[] = []
   search: string = ""
 
   constructor(private service: ContentService) {
-    this.service.getAllTeams().then(result => {
+    this.service.getAdminTeams().then(result => {
       this.teams = result
       this.allTeams = result
     })

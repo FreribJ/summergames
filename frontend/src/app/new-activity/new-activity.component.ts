@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {ContentService} from "../content.service";
-import {Activity, Game, Team} from "../model/models";
+import {Activity, Game, Team} from "../model/objects";
 
 @Component({
   selector: 'app-new-activity',

@@ -1,65 +1,62 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {ContentService} from "./content.service";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit, AfterViewInit {
+export class AppComponent {
   title = 'Frenker Sommerspiele 2023';
 
   menuOpen = false;
   newOpen = false
-  menuItems: { name: string, link: string }[] = []
+  menuItems: { name: string, link: string, icon: string }[] = []
   loginSuccess: boolean = false
+  returnAfterLogin?: string
 
 
   constructor(private service: ContentService,
-              private router: Router) {
+              private router: Router,
+              private route: ActivatedRoute) {
     this.checkLogin()
   }
 
-  //TODO: Eigentlich bei jeden Call wieder auf Login leiten, wenn nicht autorisiert...
   checkLogin() {
     this.service.checkLogin().subscribe(value => {
       this.loginSuccess = true
       if (value.admin) {
         this.menuItems = [
-          {name: 'Übersicht', link: ''},
-          {name: 'Spielplan', link: 'plans'},
-          {name: 'Gespielte Spiele', link: 'activities'},
-          {name: 'Ratespiel', link: 'guessing'},
-          {name: 'Admin-Bereich', link: 'admin'},
+          {name: 'Übersicht', link: '', icon: 'fa-house'},
+          {name: 'Spielplan', link: 'plans', icon: 'fa-table-list'},
+          {name: 'Gespielte Spiele', link: 'activities', icon: 'fa-list-check'},
+          {name: 'Ratespiel', link: 'guessing', icon: 'fa-question'},
+          {name: 'Admin-Bereich', link: 'admin', icon: 'fa-triangle-exclamation'},
         ]
       } else {
         this.menuItems = [
-          {name: 'Übersicht', link: ''},
-          {name: 'Spielplan', link: 'plans'},
-          {name: 'Gespielte Spiele', link: 'activities'},
-          {name: 'Ratespiel', link: 'guessing'},
+          {name: 'Übersicht', link: '', icon: 'fa-house'},
+          {name: 'Spielplan', link: 'plans', icon: 'fa-table-list'},
+          {name: 'Gespielte Spiele', link: 'activities', icon: 'fa-list-check'},
+          {name: 'Ratespiel', link: 'guessing', icon: 'fa-question'},
         ]
+      }
+      if (value.easterEggs > 0) {
+        this.menuItems.push({name: 'Easter Eggs', link: 'eastereggs', icon: 'fa-egg'})
+      }
+      if (this.returnAfterLogin && this.returnAfterLogin != '/login') {
+        this.router.navigate([this.returnAfterLogin])
+        this.returnAfterLogin = undefined
       }
     }, error => {
       if (error.status == 401) {
+        this.returnAfterLogin = location.pathname
         this.router.navigate(['login'])
         this.menuItems = [
-          {name: 'Login', link: 'login'}
+          {name: 'Login', link: 'login', icon: ''}
         ]
       }
     })
   }
-
-  ngOnInit(): void {
-
-  }
-
-  ngAfterViewInit(): void {
-  }
-
-  onOpenMenuClick() {
-    //open Modal
-  }
-
 }

@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {ContentService} from "../../content.service";
-import {AdminActivity, Game, Team} from "../../model/models";
+import {Game, Team} from "../../model/objects";
+import {AdminActivity} from "../../model/adminObjects";
 
 @Component({
   selector: 'app-admin-activity-detail',
@@ -20,8 +21,11 @@ export class AdminActivityDetailComponent implements OnInit {
   selectedTeam2Id?: number
   selectedWinner?: number
 
+  deleteCountdown = 5
+
   constructor(private route: ActivatedRoute,
-              private service: ContentService) {
+              private service: ContentService,
+              private router: Router) {
     service.getTeams().then(teams => this.teams = teams)
     service.getGames().then(games => this.games = games)
   }
@@ -29,19 +33,31 @@ export class AdminActivityDetailComponent implements OnInit {
   onFinishClick() {
     let winnerId: number | null
     if (this.selectedWinner == 0)
-      winnerId = null //TODO: evtl. null statt undefinded
+      winnerId = null
     else
       winnerId = this.selectedWinner == 1 ? this.selectedTeam1Id! : this.selectedTeam2Id!
     this.service.editAdminActivity(this.activity!.id, this.selectedGameId!, this.selectedTeam1Id!, this.selectedTeam2Id!, winnerId).subscribe(value => {
-      //TODO: show success message
+      this.router.navigate(['../../'], {relativeTo: this.route})
+      alert('Erfolgreich gespeichert')
     })
+  }
+
+  onDeleteClick() {
+    if (this.deleteCountdown > 1) {
+      this.deleteCountdown--
+    } else {
+      this.service.deleteAdminActivity(this.activity!.id).subscribe(value => {
+        this.router.navigate(['../../'], {relativeTo: this.route})
+        alert('Erfolgreich gelöscht')
+      })
+    }
   }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       if (params.has('id')) {
         //TODO: evtl. getOneActivity()
-        let subscription = this.service.getAllActivities().subscribe(activities => {
+        let subscription = this.service.getAdminActivities().subscribe(activities => {
           const activity = activities.find(a => a.id === parseInt(<string>params.get('id')))
           if (!activity)
             throw new Error('No activity found')

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {Activity} from "../model/models";
+import {Activity} from "../model/objects";
 import {ContentService} from "../content.service";
 
 @Component({
