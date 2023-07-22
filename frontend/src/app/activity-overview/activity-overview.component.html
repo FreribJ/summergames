@@ -1,0 +1,8 @@
+
+  <h1 class="title">Gespielte Spiele</h1>
+  <div class="field">
+    <div class="field" *ngFor="let a of activities">
+      <activity [activity]="a"></activity>
+    </div>
+    <h2 class="subtitle" *ngIf="activities.length == 0">Noch kein Spiel eingetragen!</h2>
+  </div>

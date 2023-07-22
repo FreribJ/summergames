@@ -1,0 +1,9 @@
+<h1 class="title">Alle Teams</h1>
+<input class="input field" type="text" placeholder="Suche" [(ngModel)]="search" (keyup)="onKeyPress()">
+<div class="field" *ngFor="let t of teams">
+  <div class="box is-fullwidth">
+    <p>Name: {{t.name}} ({{t.partner1}} & {{t.partner2}})</p>
+    <p>Clique: {{t.clique}} </p>
+    <p>Passwort: {{t.password}}</p>
+  </div>
+</div>

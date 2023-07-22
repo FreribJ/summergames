@@ -1,0 +1,8 @@
+<h1 class="title">🛑Admin-Bereich🛑</h1>
+<div class="field" *ngFor="let o of options" routerLink="{{o.link}}">
+  <a>
+    <div class="box is-fullwidth">
+      {{o.name}}
+    </div>
+  </a>
+</div>

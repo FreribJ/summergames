@@ -1,0 +1,36 @@
+<h1 class="title">Ergebnisse</h1>
+
+<button class="button is-fullwidth field {{acceptEntries ? 'is-danger' : 'is-success'}}" (click)="onStopEntriesClick()"
+        [disabled]="acceptEntries == undefined">{{acceptEntries ? 'Abgabe beenden' : 'Abgabe starten'}}</button>
+
+<p class="field">Auswertung:</p>
+
+<div class="field">
+  <div class="control has-icons-left">
+    <div class="select is-fullwidth">
+      <select [(ngModel)]="auswertung" (ngModelChange)="startEvaluation($event)">
+        <option value="clique">Beste Clique</option>
+        <option value="team">Bestes Team</option>
+      </select>
+      <span class="icon is-small is-left">
+        <i class="fas fa-square-poll-vertical"></i>
+      </span>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="auswertung == 'team'">
+  <div class="box field" *ngFor="let t of teamResults; index as i">
+    <h2 class="subtitle">{{i + 1}}. {{t.name}}</h2>
+    <p>Spiele gewonnen: {{t.wins}}</p>
+    <p>Spiele verloren: {{t.loses}}</p>
+    <p style="font-weight: bold">Punkte: {{t.points}}</p>
+  </div>
+</div>
+
+<div *ngIf="auswertung == 'clique'">
+  <div class="box field" *ngFor="let c of cliqueResults; index as i">
+    <h2 class="subtitle">{{i + 1}}. {{c.name}}</h2>
+    <p style="font-weight: bold">Spiele gewonnen: {{c.wins}}</p>
+  </div>
+</div>

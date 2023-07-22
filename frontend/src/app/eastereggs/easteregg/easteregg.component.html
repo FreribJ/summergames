@@ -1,0 +1,13 @@
+<div *ngIf="easteregg">
+  <h1 class="title">Du hast ein Easteregg gefunden!</h1>
+  <h2 class="subtitle">{{easteregg.title}}</h2>
+  <p class="field">{{easteregg.text}}</p>
+  <div class="image ">
+    <img style="border-radius: 10px; box-shadow: 5px 5px 5px #ccc;" src="{{easteregg.srcImage}}">
+  </div>
+</div>
+<div *ngIf="!easteregg">
+  <h1 class="title">
+    Nicht schummeln!!!
+  </h1>
+</div>

@@ -1,0 +1,14 @@
+<div class="field">
+  <h2 class="title">Spielplan</h2>
+</div>
+<progress class="progress is-primary field" value="{{progress.value}}" max="{{progress.max}}"></progress>
+<div class="field" style="padding: 10px ">
+  <div class="field" *ngFor="let a of activities">
+    <a>
+      <activity [activity]="a" (click)="onNewActivityClick(a)"></activity>
+    </a>
+  </div>
+  <h2 class="subtitle" *ngIf="activities.length == 0">Ihr habt euren Plan abgearbeitet!</h2>
+</div>
+<div>
+</div>

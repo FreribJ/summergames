@@ -1,0 +1,32 @@
+<h2 class="title">Login</h2>
+<div class="field">
+  <label class="label">Teamname</label>
+  <div class="control has-icons-left">
+    <div class="select is-fullwidth">
+      <select [(ngModel)]="selectedTeamId" >
+        <option *ngFor="let t of teams" value="{{t.id}}">{{t.name}}</option>
+      </select>
+      <span class="icon is-small is-left">
+        <i class="fas fa-user-group"></i>
+      </span>
+    </div>
+  </div>
+</div>
+
+
+<div class="field">
+  <label class="label">Passwort</label>
+  <div class="control has-icons-left">
+<!--    TODO: using is-loading and is-danger for loading an wrong answers -> for all-->
+    <input class="input {{passwordWrong ? 'is-danger' : ''}}" type="password" placeholder="Passwort" (keyup)="onEnterClick($event)" [(ngModel)]="password">
+    <span class="icon is-small is-left">
+      <i class="fas fa-lock"></i>
+    </span>
+  </div>
+</div>
+
+<div class="field">
+  <div class="control">
+    <button class="button is-link is-fullwidth" (click)="onLoginClick()" [disabled]="!password || !selectedTeamId">Login</button>
+  </div>
+</div>

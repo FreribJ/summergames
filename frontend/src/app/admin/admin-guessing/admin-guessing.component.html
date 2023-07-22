@@ -1,0 +1,8 @@
+<h1 class="title">Alle Schätzungen</h1>
+<input class="input field" type="number" placeholder="Ergebnis" [(ngModel)]="actual" (keydown)="onEnterPress($event)">
+<div class="field" *ngFor="let g of guesses">
+    <div class="box is-fullwidth">
+      <p>{{g.team.name}} schätzt: {{g.guess <= 0 ? '/' : g.guess}}</p>
+      <p *ngIf="g.guess > 0 && actual">Abweichung: {{Math.abs(g.guess - actual!)}}</p>
+    </div>
+</div>

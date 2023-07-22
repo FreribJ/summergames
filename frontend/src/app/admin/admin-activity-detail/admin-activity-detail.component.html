@@ -1,0 +1,60 @@
+  <p>Spiel:</p>
+  <div class="field">
+    <div class="control has-icons-left">
+      <div class="select is-fullwidth">
+        <select [(ngModel)]="selectedGameId" [disabled]="!selectedGameId || activity!.plan">
+          <option *ngFor="let g of games" value="{{g.id}}">{{g.name}}</option>
+        </select>
+        <span class="icon is-small is-left">
+        <i class="fas fa-dice"></i>
+      </span>
+      </div>
+    </div>
+  </div>
+
+  <p>Team 1:</p>
+  <div class="field">
+    <div class="control has-icons-left">
+      <div class="select is-fullwidth">
+        <select [(ngModel)]="selectedTeam1Id" [disabled]="!selectedTeam1Id || activity!.plan">
+          <option *ngFor="let t of teams" value="{{t.id}}">{{t.name}} ({{t.partner1}} & {{t.partner2}})</option>
+        </select>
+        <span class="icon is-small is-left">
+        <i class="fas fa-user-group"></i>
+      </span>
+      </div>
+    </div>
+  </div>
+
+
+  <p>Team 2:</p>
+  <div class="field">
+    <div class="control has-icons-left">
+      <div class="select is-fullwidth">
+        <select [(ngModel)]="selectedTeam2Id" [disabled]="!selectedTeam2Id || activity!.plan">
+          <option *ngFor="let t of teams" value="{{t.id}}">{{t.name}} ({{t.partner1}} & {{t.partner2}})</option>
+        </select>
+        <span class="icon is-small is-left">
+        <i class="fas fa-user-group"></i>
+      </span>
+      </div>
+    </div>
+  </div>
+
+  <p>Winner:</p>
+  <div class="field">
+    <div class="control has-icons-left">
+      <div class="select is-fullwidth">
+        <select [(ngModel)]="selectedWinner" [disabled]="!selectedWinner">
+          <option value="0">Noch offen</option>
+          <option value="1">Team 1</option>
+          <option value="2">Team 2</option>
+        </select>
+        <span class="icon is-small is-left">
+        <i class="fas fa-trophy"></i>
+      </span>
+      </div>
+    </div>
+  </div>
+<button class="button is-primary is-fullwidth field" [disabled]="!activity || selectedTeam1Id == selectedTeam2Id" (click)="onFinishClick()">Speichern</button>
+

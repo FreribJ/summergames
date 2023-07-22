@@ -1,0 +1,16 @@
+.container {
+  position: relative;
+}
+
+.fixed {
+  width: 100%;
+  height: auto;
+}
+
+/* Style the button and place it in the middle of the container/image */
+.lose {
+  position: absolute;
+  bottom: 20pt;
+  right: 0;
+
+}

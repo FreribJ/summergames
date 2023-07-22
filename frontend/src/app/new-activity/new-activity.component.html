@@ -1,0 +1,46 @@
+
+<h2 class="subtitle">Team {{team?.name}} hat im Spiel</h2>
+
+<div class="field">
+  <div class="control has-icons-left">
+    <div class="select is-fullwidth">
+      <select [(ngModel)]="selectedGameId" disabled="{{planId !== -1}}">
+        <option *ngFor="let g of games" value="{{g.id}}">{{g.name}}</option>
+      </select>
+      <span class="icon is-small is-left">
+        <i class="fas fa-dice"></i>
+      </span>
+    </div>
+  </div>
+</div>
+
+<h2 class="subtitle">gegen das Team</h2>
+
+<div class="field">
+  <div class="control has-icons-left">
+    <div class="select is-fullwidth">
+      <select [(ngModel)]="selectedOpponentId" disabled="{{planId !== -1}}">
+        <option *ngFor="let t of oponents" value="{{t.id}}">{{t.name}} ({{t.partner1}} & {{t.partner2}})</option>
+      </select>
+      <span class="icon is-small is-left">
+        <i class="fas fa-user-group"></i>
+      </span>
+    </div>
+  </div>
+</div>
+
+
+<div class="field">
+  <div class="control has-icons-left">
+    <div class="select is-fullwidth">
+      <select [(ngModel)]="selectedState" >
+        <option value="won">Gewonnen</option>
+        <option value="lost">Verloren</option>
+      </select>
+      <span class="icon is-small is-left">
+        <i class="fas fa-trophy"></i>
+      </span>
+    </div>
+  </div>
+</div>
+<button class="button is-primary is-fullwidth" [disabled]="!selectedGameId || !selectedOpponentId || !selectedState" (click)="onFinishClick()">Speichern</button>

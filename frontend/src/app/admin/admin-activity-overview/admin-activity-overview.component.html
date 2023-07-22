@@ -1,0 +1,12 @@
+<h1 class="title">Alle Aktivitäten</h1>
+<input class="input field" type="text" placeholder="Suche" [(ngModel)]="search" (keyup)="onKeyPress()">
+<div class="field" *ngFor="let a of activites">
+  <a routerLink="./activity/{{a.id}}">
+  <div class="box is-fullwidth">
+    <h2 class="subtitle">{{a.plan ? 'Planspiel' : 'Freies Spiel'}}</h2>
+    <p>Spiel: {{a.game.name}} </p>
+    <p [style]="{'font-weight': a.winner && a.winner.id == a.team1.id ? 'bold' : 'normal'}">Team 1: {{a.team1.name}} ({{a.team1.partner1}} & {{a.team1.partner2}})</p>
+    <p [style]="{'font-weight': a.winner && a.winner.id == a.team2.id ? 'bold' : 'normal'}">Team 2: {{a.team2.name}} ({{a.team2.partner1}} & {{a.team2.partner2}})</p>
+  </div>
+  </a>
+</div>

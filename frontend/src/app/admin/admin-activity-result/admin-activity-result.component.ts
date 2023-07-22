@@ -1,0 +1,84 @@
+import { Component } from '@angular/core';
+import {ContentService} from "../../content.service";
+import {Activity, AdminActivity, Team} from "../../model/models";
+
+interface TeamResult extends Team {
+  wins: number
+  loses: number
+  points: number
+}
+
+interface CliqueResult {
+  id: string
+  name: string
+  wins: number
+}
+
+@Component({
+  selector: 'app-admin-activity-result',
+  templateUrl: './admin-activity-result.component.html',
+  styleUrls: ['./admin-activity-result.component.css']
+})
+export class AdminActivityResultComponent {
+
+  //TODO: evtl. zum Schluss für alle öffentlich machen
+
+  auswertung?: string
+  activities: AdminActivity[] = []
+
+  teamResults: TeamResult[] = []
+
+  cliqueResults: CliqueResult[] = [
+    {id: 'jannes', name: 'Jannes Clique', wins: 0},
+    {id: 'mattes', name: 'Mattes Clique', wins: 0}
+    ]
+
+  acceptEntries?: boolean
+
+  constructor(private service: ContentService) {
+    // TODO: implement method:
+    // this.service.getAcceptEntries()
+    service.getAllActivities().subscribe(value => {
+      this.activities = value
+    })
+    service.getTeams().then(value => {
+      value.forEach(team => {
+        this.teamResults.push({...team, wins: 0, loses: 0, points: 0})
+      })
+    })
+  }
+
+  onStopEntriesClick() {
+    // TODO: implement method:
+    // this.service.setAcceptEntries(this.auswertung!)
+  }
+
+  startEvaluation(evt: 'clique' |'team') {
+    if (evt == "team") {
+      this.teamResults.forEach(team => {
+        team.wins = this.activities.filter(a => a.winner.id == team.id).length
+        team.loses = this.activities.filter(a => a.winner.id != -1 && a.winner.id != team.id && (a.team1.id == team.id || a.team2.id == team.id)).length
+        team.points = team.wins - team.loses
+      })
+      this.teamResults.sort((a, b) => {
+        if (a.points == b.points)
+          return 0
+        if (a.points < b.points)
+          return 1
+        return -1
+      })
+    } else {
+      this.cliqueResults.forEach(clique => {
+        // @ts-ignore
+        clique.wins = this.activities.filter(a => a.plan && a.winner.clique == clique.id).length
+      })
+      this.cliqueResults.sort((a, b) => {
+        if (a.wins == b.wins)
+          return 0
+        if (a.wins < b.wins)
+          return 1
+        return -1
+      })
+    }
+  }
+}
