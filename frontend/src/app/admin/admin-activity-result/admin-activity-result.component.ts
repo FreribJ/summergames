@@ -36,6 +36,8 @@ export class AdminActivityResultComponent {
 
   acceptEntries?: boolean
 
+  toggleCountdown = 5
+
   constructor(private service: ContentService) {
     this.service.getAcceptEntries().subscribe(value => {
       this.acceptEntries = value.acceptEntries
@@ -52,11 +54,16 @@ export class AdminActivityResultComponent {
     })
   }
 
-  onStopEntriesClick() {
-    if (this.acceptEntries !== undefined)
-      this.service.setAcceptEntries(!this.acceptEntries).subscribe(value => {
-        this.acceptEntries = value.acceptEntries
-      })
+  onToggleEntriesClick() {
+    if (this.toggleCountdown > 1) {
+      this.toggleCountdown--
+    } else {
+      if (this.acceptEntries !== undefined)
+        this.service.setAcceptEntries(!this.acceptEntries).subscribe(value => {
+          this.toggleCountdown = 5
+          this.acceptEntries = value.acceptEntries
+        })
+    }
   }
 
   startEvaluation(evt: 'clique' |'team') {

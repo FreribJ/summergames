@@ -1,14 +1,14 @@
 <h1 class="title">Ergebnisse</h1>
 
-<button class="button is-fullwidth field {{acceptEntries ? 'is-danger' : 'is-success'}}" (click)="onStopEntriesClick()"
-        [disabled]="acceptEntries === undefined">{{acceptEntries ? 'Abgabe beenden' : 'Abgabe starten'}}</button>
+<button class="button is-fullwidth field {{acceptEntries ? 'is-danger' : 'is-success'}}" (click)="onToggleEntriesClick()"
+        [disabled]="acceptEntries === undefined">{{acceptEntries ? 'Abgabe beenden' : 'Abgabe starten'}} (Press {{toggleCountdown}}x)</button>
 
 <p class="field">Auswertung:</p>
 
 <div class="field">
   <div class="control has-icons-left">
     <div class="select is-fullwidth">
-      <select [(ngModel)]="auswertung" (ngModelChange)="startEvaluation($event)">
+      <select [disabled]="!!acceptEntries" [(ngModel)]="auswertung" (ngModelChange)="startEvaluation($event)">
         <option value="clique">Beste Clique</option>
         <option value="team">Bestes Team</option>
       </select>
