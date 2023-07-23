@@ -80,5 +80,13 @@ export class RestService {
   postEasterEgg(id: number) {
     return this.http.post(`http://${this.BACKEND_IP}:${this.BACKEND_PORT}/easteregg`, {id}, {withCredentials:true})
   }
+
+  getAcceptEntries(): Observable<{acceptEntries: boolean}> {
+    return this.http.get<{acceptEntries: boolean}>(`http://${this.BACKEND_IP}:${this.BACKEND_PORT}/admin/acceptentries`, {withCredentials:true})
+  }
+
+  putAcceptEntries(acceptEntries: boolean)  {
+    return this.http.put<{acceptEntries: boolean}>(`http://${this.BACKEND_IP}:${this.BACKEND_PORT}/admin/acceptentries`, {acceptEntries}, {withCredentials:true})
+  }
 }
 

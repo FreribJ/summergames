@@ -1,7 +1,7 @@
 <h1 class="title">Ergebnisse</h1>
 
 <button class="button is-fullwidth field {{acceptEntries ? 'is-danger' : 'is-success'}}" (click)="onStopEntriesClick()"
-        [disabled]="acceptEntries == undefined">{{acceptEntries ? 'Abgabe beenden' : 'Abgabe starten'}}</button>
+        [disabled]="acceptEntries === undefined">{{acceptEntries ? 'Abgabe beenden' : 'Abgabe starten'}}</button>
 
 <p class="field">Auswertung:</p>
 

@@ -29,6 +29,11 @@ export class GuessingComponent {
     this.typedGuess = Math.floor(this.typedGuess!)
     this.service.putGuess(this.typedGuess!).subscribe(guess => {
       this.confirmedGuess = guess
+    }, error => {
+      if (error.status === 403) {
+        alert('Das Eintragen von Schätzungen wurde noch nicht freigegeben oder wurde schon beendet. ')
+      }
+      console.error(error)
     })
   }
 

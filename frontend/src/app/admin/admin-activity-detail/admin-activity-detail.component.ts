@@ -30,6 +30,13 @@ export class AdminActivityDetailComponent implements OnInit {
     service.getGames().then(games => this.games = games)
   }
 
+  formatTimeWithDate(date?: Date) {
+    if (!date)
+      return ""
+    return date.toLocaleDateString([], {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'})
+  }
+
+
   onFinishClick() {
     let winnerId: number | null
     if (this.selectedWinner == 0)

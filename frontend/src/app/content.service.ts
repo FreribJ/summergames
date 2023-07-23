@@ -178,9 +178,16 @@ export class ContentService {
     return this.rest.getFoundEasterEggs()
   }
 
-  postEasteregg(id: number
-  ) {
+  postEasteregg(id: number) {
     return this.rest.postEasterEgg(id)
+  }
+
+  getAcceptEntries() {
+    return this.rest.getAcceptEntries()
+  }
+
+  setAcceptEntries(accept: boolean) {
+    return this.rest.putAcceptEntries(accept)
   }
 }
 
@@ -226,7 +233,16 @@ async function parseROActivities(roactivites: ROActivity[], service: ContentServ
     else
       state = a.id_winner == team.id ? "won" : "lost"
 
-    const activity: Activity = {id: a.id, game: game, opponent: opponent, state: state, plan: a.plan}
+    const timestamp = a.timestamp ? new Date(a.timestamp) : undefined
+
+    const activity: Activity = {
+      id: a.id,
+      game: game,
+      opponent: opponent,
+      state: state,
+      plan: a.plan,
+      timestamp: timestamp
+    }
     result.push(activity)
   })
   return result
@@ -257,6 +273,8 @@ async function parseAdminROActivities(roactivites: ROActivity[], service: Conten
 
     const winner = teams.find(t => t.id == a.id_winner)
 
+    const timestamp = a.timestamp ? new Date(a.timestamp) : undefined
+
     const activity: AdminActivity = {
       id: a.id,
       game: game,
@@ -264,7 +282,7 @@ async function parseAdminROActivities(roactivites: ROActivity[], service: Conten
       team2: team2,
       winner: winner ? winner : {id: -1},
       plan: a.plan,
-      ts: a.ts
+      timestamp: timestamp
     }
     result.push(activity)
   })

@@ -11,11 +11,15 @@ const db = mysql.createConnection({
     password: "password",
     database: "summergames"
 });
+
 db.connect(function (err) {
     if (err) throw err;
     app.set('connection', db)
+
     console.log('Connected to db\n')
 })
+
+app.set('acceptentries', true)
 
 //Cookie parser
 const sessionParser = async function (req, res, next) {

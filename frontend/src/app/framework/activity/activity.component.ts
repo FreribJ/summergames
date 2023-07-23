@@ -18,6 +18,13 @@ export class ActivityComponent implements OnInit {
 
   }
 
+  formatTime(date?: Date) {
+    if (!date)
+      return ""
+    return date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})
+  }
+
+
   ngOnInit(): void {
     if (this.activity.state == "won") {
       this.color = "lightgreen"

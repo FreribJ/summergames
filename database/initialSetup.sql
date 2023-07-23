@@ -33,13 +33,16 @@ create table session
 (
     id      serial primary key,
     token   bigint UNIQUE,
-    id_team bigint references team (id)
+    id_team bigint references team (id),
+    timestamp timestamp
 );
+alter table session add column timestamp timestamp;
 
 # TODO: add timestamp
 create table easteregg
 (
     id bigint,
     id_team bigint references team (id),
-    primary key (id, id_team)
+    primary key (id, id_team),
+    timestamp timestamp
 );

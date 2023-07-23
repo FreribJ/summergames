@@ -40,12 +40,22 @@ export class NewActivityComponent implements OnInit {
         throw new Error('Select all Fields')
       }
       this.service.newActivity(this.selectedGameId!, this.selectedOpponentId!, this.selectedState!).subscribe(value => {
-        this.router.navigate(['activities'])
+        this.router.navigate(['../'], {relativeTo: this.route})
+      }, error => {
+        if (error.status === 403) {
+          alert('Das Eintragen von Aktivitäten wurde noch nicht freigegeben oder ist bereits abgeschlossen. ')
+        }
+        console.error(error)
       })
     } else {
       const winnerId = this.selectedState === 'won' ? this.team!.id : this.selectedOpponentId!
       this.service.editActivity(this.planId, winnerId).subscribe(value => {
-        this.router.navigate(['plans'])
+        this.router.navigate(['../'], {relativeTo: this.route})
+      }, error => {
+        if (error.status === 403) {
+          alert('Das Eintragen von Aktivitäten wurde noch nicht freigegeben oder ist bereits abgeschlossen. ')
+        }
+        console.error(error)
       })
     }
   }

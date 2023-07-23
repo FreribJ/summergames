@@ -21,7 +21,7 @@ module.exports = async function (app) {
     //TODO: get admin eastereggs
 
     app.get('/admin/activities', async function (req, res) {
-        app.get('connection').query(`select * from activity;`, function (err, rows) {
+        app.get('connection').query(`select * from activity order by timestamp desc;`, function (err, rows) {
             if (err)
                 res.status(500).json(err).end()
             res.json(rows).end()
@@ -59,5 +59,14 @@ module.exports = async function (app) {
                 res.status(500).json(err).end()
             res.json(rows).end()
         })
+    })
+
+    app.get('/admin/acceptentries', async function (req, res) {
+        res.json({acceptEntries: app.get('acceptentries')}).end()
+    })
+
+    app.put('/admin/acceptentries', async function (req, res) {
+        app.set('acceptentries', req.body.acceptEntries)
+        res.json({acceptEntries: app.get('acceptentries')}).end()
     })
 }

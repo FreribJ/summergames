@@ -1,3 +1,17 @@
+
+
+function formatDateNow() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
 module.exports = async function (app) {
     app.get('/checkLogin', async function (req, res) {
 
@@ -32,7 +46,7 @@ module.exports = async function (app) {
     })
 
     app.get('/activities', async function (req, res) {
-        app.get('connection').query(`select * from activity where id_team1 = ${req.session.id_team} or id_team2 = ${req.session.id_team};`, function (err, rows) {
+        app.get('connection').query(`select * from activity where id_team1 = ${req.session.id_team} or id_team2 = ${req.session.id_team} order by timestamp desc;`, function (err, rows) {
             if (err)
                 res.status(500).json(err).end()
             res.json(rows).end()
@@ -40,13 +54,16 @@ module.exports = async function (app) {
     })
 
     app.post('/activity', async function (req, res) {
+        if (!app.get('acceptentries')) {
+            res.status(403).json({message: 'Entries are closed'}).end()
+            return
+        }
         const id_game = req.body.gameId
         const id_team1 = req.session.id_team
         const id_team2 = req.body.opponentId
         const id_winner = req.body.state === 'won' ? req.session.id_team : req.body.opponentId
-        // const timestamp = new Date()
         //TODO: add timestamp
-        app.get('connection').query(`insert into activity (id_game, id_team1, id_team2, id_winner) values (${id_game}, ${id_team1}, ${id_team2}, ${id_winner});`, function (err, result) {
+        app.get('connection').query(`insert into activity (id_game, id_team1, id_team2, id_winner, timestamp) values (${id_game}, ${id_team1}, ${id_team2}, ${id_winner}, '${formatDateNow()}');`, function (err, result) {
             if (err)
                 res.status(500).json(err).end()
             res.json(result).end()
@@ -54,13 +71,17 @@ module.exports = async function (app) {
     })
 
     app.put('/activity/:id', async function (req, res) {
+        if (!app.get('acceptentries')) {
+            res.status(403).json({message: 'Entries are closed'}).end()
+            return
+        }
         const id = req.params.id
         const id_winner = req.body.winnerId
         const id_team = req.session.id_team
-        app.get('connection').query(`update activity set id_winner = ${id_winner} where id = ${id} and id_winner is null and plan = 1;`, function (err, result) {
+        app.get('connection').query(`update activity set id_winner = ${id_winner}, timestamp = '${formatDateNow()}' where id = ${id} and id_winner is null and plan = 1 and (id_team1 = ${id_team} or id_team2 = ${id_team});`, function (err, result) {
             if (err)
                 res.status(500).json(err).end()
-            if (result.affectedRows === 0)
+            if (result && result.affectedRows === 0)
                 res.status(404).json({message: 'Plan already filled out or not a plan at all'})
             res.json(result).end()
         })
@@ -78,6 +99,10 @@ module.exports = async function (app) {
     })
 
     app.put('/guess', async function (req, res) {
+        if (!app.get('acceptentries')) {
+            res.status(403).json({message: 'Entries are closed'}).end()
+            return
+        }
         const id = req.session.id_team
         const guess = req.body.guess
         app.get('connection').query(`update team set guess = ${guess} where id = ${id};`, function (err, rows) {

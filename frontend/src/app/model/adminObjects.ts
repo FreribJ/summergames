@@ -7,7 +7,7 @@ export interface AdminActivity {
   team2: Team
   winner: Team | { id: -1 }
   plan: boolean
-  ts: any
+  timestamp?: Date
 }
 
 export interface AdminTeam extends Team {

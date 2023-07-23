@@ -8,13 +8,18 @@ from activity
 where id_team1 = 1
    or id_team2 = 1;
 
+select * from activity
+order by timestamp desc;
+
 insert into activity (id_game, id_team1, id_team2, id_winner, timestamp)
 values (?, ?, ?, ?, ?);
+
 update activity
 set id_winner = ?,
     timestamp = ?
 where id = ?
   and id_winner IS NULL;
+
 update activity
 set id_game   = ?,
     id_team1  = ?,
@@ -61,3 +66,6 @@ VALUES (?, ?);
 select *
 from easteregg
 where id_team = ?;
+
+select * from activity;
+update activity set timestamp = '2021-07-24 12:00:00' where id = 1;

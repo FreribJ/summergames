@@ -37,8 +37,11 @@ export class AdminActivityResultComponent {
   acceptEntries?: boolean
 
   constructor(private service: ContentService) {
-    // TODO: implement method:
-    // this.service.getAcceptEntries()
+    this.service.getAcceptEntries().subscribe(value => {
+      this.acceptEntries = value.acceptEntries
+      console.log(value.acceptEntries)
+      console.log(this.acceptEntries)
+    })
     service.getAdminActivities().subscribe(value => {
       this.activities = value
     })
@@ -50,8 +53,10 @@ export class AdminActivityResultComponent {
   }
 
   onStopEntriesClick() {
-    // TODO: implement method:
-    // this.service.setAcceptEntries(this.auswertung!)
+    if (this.acceptEntries !== undefined)
+      this.service.setAcceptEntries(!this.acceptEntries).subscribe(value => {
+        this.acceptEntries = value.acceptEntries
+      })
   }
 
   startEvaluation(evt: 'clique' |'team') {

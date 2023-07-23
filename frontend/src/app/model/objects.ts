@@ -4,6 +4,7 @@ export interface Activity {
   opponent: Team
   state: 'won' | 'lost' | 'open'
   plan: boolean
+  timestamp?: Date
 }
 
 export interface Team {

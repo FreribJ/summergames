@@ -5,7 +5,7 @@ export interface ROActivity {
   id_team2: number
   id_winner?: number
   plan: boolean
-  ts: any
+  timestamp?: string
 }
 
 export interface ROGuess {
