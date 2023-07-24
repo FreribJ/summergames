@@ -41,8 +41,6 @@ export class AdminActivityResultComponent {
   constructor(private service: ContentService) {
     this.service.getAcceptEntries().subscribe(value => {
       this.acceptEntries = value.acceptEntries
-      console.log(value.acceptEntries)
-      console.log(this.acceptEntries)
     })
     service.getAdminActivities().subscribe(value => {
       this.activities = value

@@ -11,6 +11,8 @@ export class GuessingComponent {
   typedGuess?: number
   confirmedGuess?: number
 
+  isLoading = false
+
   constructor(private service: ContentService) {
     this.service.getGuess().subscribe(guess => {
       if (guess !== -1) {
@@ -26,14 +28,18 @@ export class GuessingComponent {
   }
 
   onSendClick() {
+    this.isLoading = true
     this.typedGuess = Math.floor(this.typedGuess!)
     this.service.putGuess(this.typedGuess!).subscribe(guess => {
       this.confirmedGuess = guess
+      this.isLoading = false
     }, error => {
       if (error.status === 403) {
         alert('Das Eintragen von Schätzungen wurde noch nicht freigegeben oder wurde schon beendet. ')
+      } else {
+        alert('Fehler beim Schätzen. Bitte versuchen Sie es später erneut.')
       }
-      console.error(error)
+      this.isLoading = false
     })
   }
 

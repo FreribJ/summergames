@@ -18,7 +18,6 @@ export class AdminActivityOverviewComponent {
     this.service.getAdminActivities().subscribe(result => {
       this.allActivites = result
       this.activites = result
-      console.log(this.activites)
       this.onKeyPress()
     })
   }

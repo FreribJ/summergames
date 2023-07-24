@@ -27,8 +27,6 @@ export class EastereggComponent implements OnInit {
         this.service.postEasteregg(this.easteregg.id).subscribe(value => {
           if (!this.app.menuItems.find(mi => mi.link == 'eastereggs'))
             this.app.menuItems.push({name: 'Easter Eggs', link: 'eastereggs', icon: 'fa-egg'})
-        }, error => {
-          console.log('easteregg already found')
         })
       }
     })

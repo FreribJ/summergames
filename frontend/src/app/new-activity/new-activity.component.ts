@@ -22,6 +22,8 @@ export class NewActivityComponent implements OnInit {
 
   planId: number = -1
 
+  isLoading = false
+
   constructor(private router: Router,
               private service: ContentService,
               private route: ActivatedRoute) {
@@ -35,6 +37,7 @@ export class NewActivityComponent implements OnInit {
   }
 
   onFinishClick() {
+    this.isLoading = true
     if (this.planId == -1) {
       if (!this.selectedGameId || !this.selectedOpponentId || !this.team) {
         throw new Error('Select all Fields')
@@ -44,8 +47,9 @@ export class NewActivityComponent implements OnInit {
       }, error => {
         if (error.status === 403) {
           alert('Das Eintragen von Aktivitäten wurde noch nicht freigegeben oder ist bereits abgeschlossen. ')
-        }
-        console.error(error)
+        } else
+          alert('Ein Fehler ist aufgetreten. Versuche es erneut.')
+        this.isLoading = false
       })
     } else {
       const winnerId = this.selectedState === 'won' ? this.team!.id : this.selectedOpponentId!
@@ -54,16 +58,19 @@ export class NewActivityComponent implements OnInit {
       }, error => {
         if (error.status === 403) {
           alert('Das Eintragen von Aktivitäten wurde noch nicht freigegeben oder ist bereits abgeschlossen. ')
-        }
-        console.error(error)
+        } else
+          alert('Ein Fehler ist aufgetreten. Versuche es erneut.')
+        this.isLoading = false
       })
     }
   }
 
   ngOnInit(): void {
     this.route.queryParamMap.subscribe(params => {
+      this.isLoading = true
       if (params.has('id')) {
         this.service.getActivities().subscribe(activities => {
+          this.isLoading = false
           const activity = activities.find(a => a.id === parseInt(<string>params.get('id')))
           if (activity) {
             if (!activity.plan)
@@ -74,6 +81,7 @@ export class NewActivityComponent implements OnInit {
           }
         })
       } else {
+        this.isLoading = false
         this.planId = -1
         this.selectedGameId = undefined
         this.selectedOpponentId = undefined

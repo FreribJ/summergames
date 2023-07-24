@@ -43,4 +43,4 @@
     </div>
   </div>
 </div>
-<button class="button is-primary is-fullwidth" [disabled]="!selectedGameId || !selectedOpponentId || !selectedState" (click)="onFinishClick()">Speichern</button>
+<button class="button is-primary is-fullwidth {{isLoading ? 'is-loading' : ''}}" [disabled]="!selectedGameId || !selectedOpponentId || !selectedState" (click)="onFinishClick()">Speichern</button>

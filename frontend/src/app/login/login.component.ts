@@ -17,6 +17,8 @@ export class LoginComponent {
   password: string = ""
   passwordWrong = false
 
+  isLoading = false
+
   constructor(private router: Router,
               private service: ContentService,
               private app: AppComponent) {
@@ -34,6 +36,7 @@ export class LoginComponent {
   }
 
   onLoginClick() {
+    this.isLoading = true
     if (this.selectedTeamId){
       this.service.login(this.selectedTeamId, this.password).subscribe(value => {
         this.router.navigate([''],  {replaceUrl: true})
@@ -41,13 +44,14 @@ export class LoginComponent {
         //TODO: evtl. ContentService zurücksetzen
       },
       error => {
-        console.error(error)
-        this.passwordWrong = true
-        //TODO: show error
+        if (error.status == 401) {
+          this.passwordWrong = true
+        } else {
+          this.passwordWrong = false
+          alert("Fehler beim Login. Bitte versuchen Sie es später erneut.")
+        }
+          this.isLoading = false
       })
-
     }
-    //this.router.navigate([''])
   }
-
 }

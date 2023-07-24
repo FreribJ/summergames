@@ -108,7 +108,6 @@ export class ContentService {
           error(err) {
             if (activities.length > 0)
               alert('Die Verbindung zum Server wurde unterbrochen. Es gibt eventuell neue Aktivitäten. Bitte laden die Seite neu.')
-            console.error(err)
           }
         })
       }
@@ -195,7 +194,6 @@ async function parseROAdminGuess(roguesses: ROGuess[], service: ContentService) 
   let teams: Team[] = []
   await service.getTeams().then(t => teams = t)
 
-  console.log(teams)
   const result: AdminGuess[] = []
   roguesses.forEach(g => {
     const team = teams.find(t => t.id == g.id_team)
