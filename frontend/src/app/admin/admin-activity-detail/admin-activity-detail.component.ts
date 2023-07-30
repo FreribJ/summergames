@@ -44,7 +44,7 @@ export class AdminActivityDetailComponent implements OnInit {
     else
       winnerId = this.selectedWinner == 1 ? this.selectedTeam1Id! : this.selectedTeam2Id!
     this.service.editAdminActivity(this.activity!.id, this.selectedGameId!, this.selectedTeam1Id!, this.selectedTeam2Id!, winnerId).subscribe(value => {
-      this.router.navigate(['../../'], {relativeTo: this.route})
+      this.router.navigate(['../../'], {relativeTo: this.route, replaceUrl: true})
       alert('Erfolgreich gespeichert')
     })
   }
@@ -54,7 +54,7 @@ export class AdminActivityDetailComponent implements OnInit {
       this.deleteCountdown--
     } else {
       this.service.deleteAdminActivity(this.activity!.id).subscribe(value => {
-        this.router.navigate(['../../'], {relativeTo: this.route})
+        this.router.navigate(['../../'], {relativeTo: this.route, replaceUrl: true})
         alert('Erfolgreich gelöscht')
       })
     }

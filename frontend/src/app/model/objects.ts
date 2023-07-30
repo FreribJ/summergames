@@ -25,5 +25,5 @@ export interface Easteregg {
   id: number,
   srcImage: string,
   title: string
-  text: string
+  text?: string
 }
