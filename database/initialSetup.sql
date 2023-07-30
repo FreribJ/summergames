@@ -14,7 +14,8 @@ create table team
 create table game
 (
     id   serial primary key,
-    name varchar(255)
+    name varchar(255),
+    description varchar(2000)
 );
 
 drop table activity;

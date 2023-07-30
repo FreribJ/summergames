@@ -1,15 +1,15 @@
-<div class="box is-fullwidth" [style]="{background: color}" style="display: flex; flex-direction: row; align-items: center">
+<div class="box is-fullwidth" [style]="{background: color}"
+     style="display: flex; flex-direction: row; align-items: center">
 
     <span class="icon is-large" style="margin-right: 1em">
       <i class="fas {{icon}} fa-2x"></i>
     </span>
 
-    <div class="is-fullwidth" style="flex-grow: 1">
-      <div style="display: flex; flex-direction: row; justify-content: space-between">
-        <h2 class="subtitle">{{activity.game.name}}</h2>
-        <h2 class="subtitle" style="color: grey; flex-shrink: 0">{{formatTime(activity.timestamp)}}</h2>
-      </div>
-      <p>gegen: {{activity.opponent.name}} ({{activity.opponent.partner1}} & {{activity.opponent.partner2}})</p>
+  <div class="is-fullwidth" style="flex-grow: 1">
+    <div style="display: flex; flex-direction: row; justify-content: space-between">
+      <h2 class="subtitle">{{activity.game.name}}</h2>
+      <h2 class="subtitle" style="color: grey; flex-shrink: 0">{{formatTime(activity.timestamp)}}</h2>
     </div>
+    <p>gegen: {{activity.opponent.name}} ({{activity.opponent.partner1}} & {{activity.opponent.partner2}})</p>
+  </div>
 </div>
-

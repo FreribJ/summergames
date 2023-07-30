@@ -1,7 +1,6 @@
-
 <h2 class="subtitle">Team {{team?.name}} hat im Spiel</h2>
 
-<div class="field">
+<div class="field" style="margin-bottom: 0">
   <div class="control has-icons-left">
     <div class="select is-fullwidth">
       <select [(ngModel)]="selectedGameId" disabled="{{planId !== -1}}">
@@ -13,6 +12,8 @@
     </div>
   </div>
 </div>
+
+<a *ngIf="selectedGameId" style="font-size: small; padding-top: 0" (click)="showDescriptionClick()">Beschreibung anzeigen</a>
 
 <h2 class="subtitle">gegen das Team</h2>
 
@@ -33,7 +34,7 @@
 <div class="field">
   <div class="control has-icons-left">
     <div class="select is-fullwidth">
-      <select [(ngModel)]="selectedState" >
+      <select [(ngModel)]="selectedState">
         <option value="won">Gewonnen</option>
         <option value="lost">Verloren</option>
       </select>
@@ -43,4 +44,18 @@
     </div>
   </div>
 </div>
-<button class="button is-primary is-fullwidth {{isLoading ? 'is-loading' : ''}}" [disabled]="!selectedGameId || !selectedOpponentId || !selectedState" (click)="onFinishClick()">Speichern</button>
+
+<button class="button is-primary is-fullwidth {{isLoading ? 'is-loading' : ''}}"
+        [disabled]="!selectedGameId || !selectedOpponentId || !selectedState" (click)="onFinishClick()">Speichern
+</button>
+
+
+<div *ngIf="game" class="modal {{showDescription ? 'is-active' : ''}}" style="padding: 20pt">
+  <div class="modal-background" (click)="showDescription = false"></div>
+  <div class="modal-content box">
+    <h1 class="title">{{game!.name}}</h1>
+    <span  [innerHTML]="game!.description"></span>
+  </div>
+  <button class="modal-close is-large" aria-label="close" (click)="showDescription = false"></button>
+</div>
+

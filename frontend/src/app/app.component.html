@@ -1,7 +1,7 @@
 <div class="container" style="height: 100%; display: flex; flex-direction: column">
   <div class="fixed" style="overflow: auto">
 
-    <div class="box" style="padding: 20pt; background: #ff8484; margin: 10pt">
+    <div class="box" style="padding: 20pt; background: #88a1ff; margin: 10pt">
       <button class="button is-light" (click)="menuOpen = true">
         <i class="fas fa-bars"></i>
       </button>
@@ -26,7 +26,7 @@
       <button class="modal-close is-large" aria-label="close" (click)="menuOpen = false"></button>
     </div>
 
-    <div style="margin: 20pt; flex-grow: 1">
+    <div style="flex-grow: 1; margin: 20pt 20pt 105px;">
       <router-outlet class="fixed"></router-outlet>
     </div>
 

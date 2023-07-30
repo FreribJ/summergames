@@ -1,5 +1,3 @@
-
-
 function formatDateNow() {
     const now = new Date();
     const year = now.getFullYear();
@@ -15,15 +13,7 @@ function formatDateNow() {
 module.exports = async function (app) {
     app.get('/checkLogin', async function (req, res) {
 
-        res.json({ success: true, admin: req.session.admin, easterEggs: req.session.easterEggs }).end();
-    })
-
-    app.get('/teams', async function (req, res) {
-        app.get('connection').query('select id, name, teampartner1 as partner1, teampartner2 as partner2, clique from team;', function (err, rows) {
-            if (err)
-                res.status(500).json(err).end()
-            res.json(rows).end()
-        })
+        res.json({success: true, admin: req.session.admin, easterEggs: req.session.easterEggs}).end();
     })
 
     app.get('/team', async function (req, res) {
@@ -39,16 +29,20 @@ module.exports = async function (app) {
 
     app.get('/games', async function (req, res) {
         app.get('connection').query('select * from game;', function (err, rows) {
-            if (err)
+            if (err) {
                 res.status(500).json(err).end()
+                return
+            }
             res.json(rows).end()
         })
     })
 
     app.get('/activities', async function (req, res) {
         app.get('connection').query(`select * from activity where id_team1 = ${req.session.id_team} or id_team2 = ${req.session.id_team} order by timestamp desc;`, function (err, rows) {
-            if (err)
+            if (err) {
                 res.status(500).json(err).end()
+                return
+            }
             res.json(rows).end()
         })
     })
@@ -64,8 +58,10 @@ module.exports = async function (app) {
         const id_winner = req.body.state === 'won' ? req.session.id_team : req.body.opponentId
         //TODO: add timestamp
         app.get('connection').query(`insert into activity (id_game, id_team1, id_team2, id_winner, timestamp) values (${id_game}, ${id_team1}, ${id_team2}, ${id_winner}, '${formatDateNow()}');`, function (err, result) {
-            if (err)
+            if (err) {
                 res.status(500).json(err).end()
+                return
+            }
             res.json(result).end()
         })
     })
@@ -79,10 +75,14 @@ module.exports = async function (app) {
         const id_winner = req.body.winnerId
         const id_team = req.session.id_team
         app.get('connection').query(`update activity set id_winner = ${id_winner}, timestamp = '${formatDateNow()}' where id = ${id} and id_winner is null and plan = 1 and (id_team1 = ${id_team} or id_team2 = ${id_team});`, function (err, result) {
-            if (err)
+            if (err) {
                 res.status(500).json(err).end()
-            if (result && result.affectedRows === 0)
-                res.status(404).json({message: 'Plan already filled out or not a plan at all'})
+                return
+            }
+            if (result && result.affectedRows === 0) {
+                res.status(409).json({message: 'Plan already filled out or not a plan at all'})
+                return
+            }
             res.json(result).end()
         })
     })
@@ -106,16 +106,20 @@ module.exports = async function (app) {
         const id = req.session.id_team
         const guess = req.body.guess
         app.get('connection').query(`update team set guess = ${guess} where id = ${id};`, function (err, rows) {
-            if (err)
+            if (err) {
                 res.status(500).json(err).end()
+                return
+            }
             res.json(guess).end()
         })
     })
 
     app.get('/eastereggs', async function (req, res) {
         app.get('connection').query(`select id from easteregg where id_team = ${req.session.id_team};`, function (err, rows) {
-            if (err)
+            if (err) {
                 res.status(500).json(err).end()
+                return
+            }
             res.json(rows).end()
         })
     })
@@ -125,12 +129,13 @@ module.exports = async function (app) {
         const id_team = req.session.id_team
         // const timestamp = new Date()
         //TODO: add timestamp
-        app.get('connection').query(`insert into easteregg (id, id_team) values (${id}, ${id_team});`, function (err, result) {
+        app.get('connection').query(`insert into easteregg (id, id_team, timestamp) values (${id}, ${id_team}, '${formatDateNow()}');`, function (err, result) {
             if (err) {
                 if (err.errno == 1062)
                     res.status(409).json({message: 'EasterEgg already found'}).end()
                 else
                     res.status(500).json(err).end()
+                return
             }
             res.json(result).end()
         })

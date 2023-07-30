@@ -24,6 +24,9 @@ export class NewActivityComponent implements OnInit {
 
   isLoading = false
 
+  showDescription = false
+  game?: Game
+
   constructor(private router: Router,
               private service: ContentService,
               private route: ActivatedRoute) {
@@ -36,6 +39,14 @@ export class NewActivityComponent implements OnInit {
     this.service.getGames().then(games => this.games = games)
   }
 
+  showDescriptionClick() {
+    const game = this.games.find(g => g.id == this.selectedGameId)
+    if (game) {
+      this.game = game
+      this.showDescription = true
+    }
+  }
+
   onFinishClick() {
     this.isLoading = true
     if (this.planId == -1) {
@@ -43,7 +54,7 @@ export class NewActivityComponent implements OnInit {
         throw new Error('Select all Fields')
       }
       this.service.newActivity(this.selectedGameId!, this.selectedOpponentId!, this.selectedState!).subscribe(value => {
-        this.router.navigate(['../'], {relativeTo: this.route})
+        this.router.navigate(['activities'])
       }, error => {
         if (error.status === 403) {
           alert('Das Eintragen von Aktivitäten wurde noch nicht freigegeben oder ist bereits abgeschlossen. ')
@@ -54,10 +65,13 @@ export class NewActivityComponent implements OnInit {
     } else {
       const winnerId = this.selectedState === 'won' ? this.team!.id : this.selectedOpponentId!
       this.service.editActivity(this.planId, winnerId).subscribe(value => {
-        this.router.navigate(['../'], {relativeTo: this.route})
+        this.router.navigate(['plans'])
       }, error => {
         if (error.status === 403) {
           alert('Das Eintragen von Aktivitäten wurde noch nicht freigegeben oder ist bereits abgeschlossen. ')
+        } else if (error.status === 409) {
+          alert('Jemand anderes hat bereits ein Ergebnis eingetragen.')
+          this.router.navigate(['plans'])
         } else
           alert('Ein Fehler ist aufgetreten. Versuche es erneut.')
         this.isLoading = false

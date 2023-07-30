@@ -26,10 +26,4 @@ export class PlanOverviewComponent {
       })
     })
   }
-
-  onNewActivityClick(activity: Activity) {
-    if(activity.state == "open")
-      this.router.navigate(['new'], {queryParams: {['id']: activity!.id}})
-  }
-
 }

@@ -1,5 +1,5 @@
 export interface Activity {
-  id?: number
+  id: number
   game: Game
   opponent: Team
   state: 'won' | 'lost' | 'open'
@@ -18,6 +18,7 @@ export interface Team {
 export interface Game {
   id: number
   name: string
+  description: string
 }
 
 export interface Easteregg {
