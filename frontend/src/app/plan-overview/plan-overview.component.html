@@ -4,12 +4,7 @@
 <progress class="progress is-primary field" value="{{progress.value}}" max="{{progress.max}}"></progress>
 <div class="field" style="padding: 10px ">
   <div class="field" *ngFor="let a of activities">
-    <a *ngIf="a.state == 'open'; else noLink" [routerLink]="['../new']" [queryParams]="{id: a.id}">
-      <activity [activity]="a"></activity>
-    </a>
-    <ng-template #noLink>
-      <activity [activity]="a"></activity>
-    </ng-template>
+    <activity [activity]="a"></activity>
   </div>
   <h2 class="subtitle" *ngIf="activities.length == 0">Ihr habt euren Plan abgearbeitet!</h2>
 </div>

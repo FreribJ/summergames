@@ -6,7 +6,7 @@ import {Router} from "@angular/router";
 export const allEastereggs: Easteregg[] = [
   {id: 14983, srcImage: './assets/14983.jpg', title: 'Prost!!!'},
   {id: 16588, srcImage: './assets/16588.jpg', title: 'Ab in den Urlaub!'},
-  {id: 18946, srcImage: './assets/18946.webp', title: 'Saufen!!!'}
+  {id: 18946, srcImage: './assets/18946.webp', title: 'Saufen!!!'},
   {id: 18971, srcImage: './assets/18971.jpg', title: 'Prost!!!'},
   {id: 19816, srcImage: './assets/19816.jpg', title: 'Wenn man eigentlich ins Fitti wollte'},
   {id: 19843, srcImage: './assets/19843.jpg', title: 'Trinken du jetzt ein Bier!!!'},

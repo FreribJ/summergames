@@ -3,7 +3,7 @@
 <div class="field" style="margin-bottom: 0">
   <div class="control has-icons-left">
     <div class="select is-fullwidth">
-      <select [(ngModel)]="selectedGameId" disabled="{{planId !== -1}}">
+      <select [(ngModel)]="selectedGameId" [disabled]="planId !== -1 || allreadyFilledOut">
         <option *ngFor="let g of games" value="{{g.id}}">{{g.name}}</option>
       </select>
       <span class="icon is-small is-left">
@@ -20,7 +20,7 @@
 <div class="field">
   <div class="control has-icons-left">
     <div class="select is-fullwidth">
-      <select [(ngModel)]="selectedOpponentId" disabled="{{planId !== -1}}">
+      <select [(ngModel)]="selectedOpponentId" [disabled]="planId !== -1 || allreadyFilledOut">
         <option *ngFor="let t of oponents" value="{{t.id}}">{{t.name}} ({{t.partner1}} & {{t.partner2}})</option>
       </select>
       <span class="icon is-small is-left">
@@ -34,7 +34,7 @@
 <div class="field">
   <div class="control has-icons-left">
     <div class="select is-fullwidth">
-      <select [(ngModel)]="selectedState">
+      <select [(ngModel)]="selectedState" [disabled]="allreadyFilledOut">
         <option value="won">Gewonnen</option>
         <option value="lost">Verloren</option>
       </select>
@@ -46,7 +46,7 @@
 </div>
 
 <button class="button is-primary is-fullwidth {{isLoading ? 'is-loading' : ''}}"
-        [disabled]="!selectedGameId || !selectedOpponentId || !selectedState" (click)="onFinishClick()">Speichern
+        [disabled]="!selectedGameId || !selectedOpponentId || !selectedState" (click)="onFinishClick()">{{allreadyFilledOut ? 'zurück' : 'Speichern'}}
 </button>
 
 

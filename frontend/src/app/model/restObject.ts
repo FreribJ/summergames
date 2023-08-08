@@ -1,3 +1,8 @@
+export interface ROActivities {
+  activities: ROActivity[]
+  lastUpdate: number
+}
+
 export interface ROActivity {
   id: number
   id_game: number

@@ -10,12 +10,17 @@ let teams: Team[] = []
 let myTeam: Team
 let activities: Activity[] = []
 
+//Adjust as needed
+const REFRESH_INTERVAL = 1000 * 60 * 1
+
 @Injectable({
   providedIn: 'root'
 })
 export class ContentService {
 
   activeSubscription?: Subscription
+  activeInterval?: number
+
 
   constructor(private rest: RestService) {
   }
@@ -87,37 +92,79 @@ export class ContentService {
     })
   }
 
+  failedAttempts = 0
+  lastUpdate = 0
+
   getActivities(): Observable<Activity[]> {
-    //TODO: continuos refresh
     return new Observable<Activity[]>(subscriber => {
         if (activities.length > 0)
           subscriber.next(activities)
 
+        this.failedAttempts = 0
         let service = this
         if (this.activeSubscription)
           this.activeSubscription.unsubscribe()
 
-        this.activeSubscription = this.rest.getActivities().subscribe({
+
+        this.activeSubscription = this.rest.getActivities(this.lastUpdate).subscribe({
           next(roactivities) {
-            parseROActivities(roactivities, service).then(result => {
-              activities = result
-              subscriber.next(result)
-              subscriber.complete()
-            })
+            service.lastUpdate = roactivities.lastUpdate
+            if (roactivities.activities.length > 0) {
+              parseROActivities(roactivities.activities, service).then(result => {
+                service.failedAttempts = 0
+                activities = mergeArraysAndOverrideById(activities, result)
+                subscriber.next(activities)
+              })
+            }
           },
           error(err) {
-            if (activities.length > 0)
-              alert('Die Verbindung zum Server wurde unterbrochen. Es gibt eventuell neue Aktivitäten. Bitte laden die Seite neu.')
+            service.failedAttempts++
+            if (activities.length == 0) {
+              alert('Es konnte keine Verbindung mit dem Server hergestellt werden. Bitte versuch die Seite neu zu laden.')
+
+              if (service.activeSubscription)
+                service.activeSubscription.unsubscribe()
+              subscriber.complete()
+            }
+            if (service.failedAttempts == 6)
+              alert('Es konnten eine lange Zeit keine neuen Daten vom Server geladen werden. Bitte versuch die Seite neu zu laden.')
           }
         })
+
+        clearInterval(this.activeInterval)
+        this.activeInterval = setInterval(() => {
+          if (!service.activeSubscription || service.activeSubscription.closed) {
+            service.activeSubscription = service.rest.getActivities(this.lastUpdate).subscribe({
+              next(roactivities) {
+                service.lastUpdate = roactivities.lastUpdate
+                if (roactivities.activities.length > 0) {
+                  parseROActivities(roactivities.activities, service).then(result => {
+                    service.failedAttempts = 0
+                    activities = mergeArraysAndOverrideById(activities, result)
+                    subscriber.next(activities)
+
+                  })
+                }
+              },
+              error(err) {
+                service.failedAttempts++
+                if (service.failedAttempts == 6)
+                  alert('Es konnten eine lange Zeit keine neuen Daten vom Server geladen werden. Bitte versuch die Seite neu zu laden.')
+              }
+            })
+          }
+        }, REFRESH_INTERVAL)
+
+        return () => {
+          if (this.activeSubscription)
+            this.activeSubscription.unsubscribe()
+          clearInterval(this.activeInterval)
+        }
       }
     )
   }
 
-  getAdminActivities()
-    :
-    Observable<AdminActivity[]> {
-    //TODO: continuos refresh
+  getAdminActivities(): Observable<AdminActivity[]> {
     return new Observable<AdminActivity[]>(subscriber => {
       let service = this
       this.rest.getAdminActivities().subscribe({
@@ -252,8 +299,6 @@ async function parseAdminROActivities(roactivites: ROActivity[], service: Conten
   await service.getGames().then(g => games = g)
   let teams: Team[] = []
   await service.getTeams().then(t => teams = t)
-  let team: Team
-  await service.getTeam().then(t => team = t)
 
   const result: AdminActivity[] = []
   roactivites.forEach(a => {
@@ -285,5 +330,23 @@ async function parseAdminROActivities(roactivites: ROActivity[], service: Conten
     result.push(activity)
   })
   return result
+}
+
+function mergeArraysAndOverrideById(array1: Activity[], array2: Activity[]) {
+  const mergedArray = [...array1]; // Kopiere das erste Array, um es nicht zu verändern
+
+  array2.forEach(obj2 => {
+    const index = mergedArray.findIndex(obj1 => obj1.id === obj2.id);
+
+    if (index !== -1) {
+      // Objekt mit gleicher ID gefunden, überschreibe es
+      mergedArray[index] = obj2;
+    } else {
+      // Objekt mit neuer ID, füge es hinzu
+      mergedArray.push(obj2);
+    }
+  });
+
+  return mergedArray;
 }
 
