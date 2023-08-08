@@ -79,4 +79,24 @@ update activity set timestamp = '2021-07-24 12:00:00' where id = 1;
 #test for duplicates
 select  id_team1, id_team2, count(*)
 from activity
-group by  id_team1, id_team2
+group by  id_team1, id_team2;
+
+select  id_team1, id_team2, id_game, count(*)
+from activity
+group by  id_team1, id_team2, id_game;
+
+select  id_team1, count(*)
+from activity
+group by  id_team1;
+
+select  id_team2, count(*)
+from activity
+group by  id_team2;
+
+select  id_team1, id_game, count(*)
+from activity
+group by  id_team1, id_game;
+
+select  id_team2, id_game, count(*)
+from activity
+group by  id_team2, id_game;

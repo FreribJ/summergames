@@ -109,7 +109,7 @@ export class ContentService {
         this.activeSubscription = this.rest.getActivities(this.lastUpdate).subscribe({
           next(roactivities) {
             service.lastUpdate = roactivities.lastUpdate
-            if (roactivities.activities.length > 0) {
+            if (roactivities.activities.length > 0 || activities.length == 0) {
               parseROActivities(roactivities.activities, service).then(result => {
                 service.failedAttempts = 0
                 activities = mergeArraysAndOverrideById(activities, result)
