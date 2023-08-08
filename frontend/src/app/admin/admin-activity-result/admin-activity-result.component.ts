@@ -67,8 +67,8 @@ export class AdminActivityResultComponent {
   startEvaluation(evt: 'clique' |'team') {
     if (evt == "team") {
       this.teamResults.forEach(team => {
-        team.wins = this.activities.filter(a => a.winner.id == team.id).length
-        team.loses = this.activities.filter(a => a.winner.id != -1 && a.winner.id != team.id && (a.team1.id == team.id || a.team2.id == team.id)).length
+        team.wins = this.activities.filter(a => a.winner && a.winner.id == team.id).length
+        team.loses = this.activities.filter(a => a.winner && a.winner.id != team.id && (a.team1.id == team.id || a.team2.id == team.id)).length
         team.points = team.wins * 2 - team.loses
       })
       this.teamResults.sort((a, b) => {

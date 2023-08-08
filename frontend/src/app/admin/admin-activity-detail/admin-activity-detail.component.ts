@@ -35,7 +35,13 @@ export class AdminActivityDetailComponent implements OnInit {
   formatTimeWithDate(date?: Date) {
     if (!date)
       return ""
-    return date.toLocaleDateString([], {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'})
+    return date.toLocaleDateString([], {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
   }
 
 
@@ -70,8 +76,10 @@ export class AdminActivityDetailComponent implements OnInit {
         //TODO: evtl. getOneActivity()
         let subscription = this.service.getAdminActivities().subscribe(activities => {
           const activity = activities.find(a => a.id === parseInt(<string>params.get('id')))
-          if (!activity)
-            throw new Error('No activity found')
+          if (!activity) {
+            alert('activity not found')
+            return
+          }
           this.activity = activity
           this.selectedGameId = activity.game.id
           this.selectedTeam1Id = activity.team1.id

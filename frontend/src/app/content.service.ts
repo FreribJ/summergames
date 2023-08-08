@@ -11,7 +11,8 @@ let myTeam: Team
 let activities: Activity[] = []
 
 //Adjust as needed
-const REFRESH_INTERVAL = 1000 * 60 * 1
+const REFRESH_INTERVAL = 1000 * 10
+const MAX_FAILED_ATTEMPTS = 10
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,6 @@ export class ContentService {
 
   activeSubscription?: Subscription
   activeInterval?: number
-
 
   constructor(private rest: RestService) {
   }
@@ -97,8 +97,7 @@ export class ContentService {
 
   getActivities(): Observable<Activity[]> {
     return new Observable<Activity[]>(subscriber => {
-        if (activities.length > 0)
-          subscriber.next(activities)
+        subscriber.next(activities)
 
         this.failedAttempts = 0
         let service = this
@@ -108,8 +107,8 @@ export class ContentService {
 
         this.activeSubscription = this.rest.getActivities(this.lastUpdate).subscribe({
           next(roactivities) {
-            service.lastUpdate = roactivities.lastUpdate
-            if (roactivities.activities.length > 0 || activities.length == 0) {
+            if (roactivities) {
+              service.lastUpdate = roactivities.lastUpdate
               parseROActivities(roactivities.activities, service).then(result => {
                 service.failedAttempts = 0
                 activities = mergeArraysAndOverrideById(activities, result)
@@ -126,7 +125,7 @@ export class ContentService {
                 service.activeSubscription.unsubscribe()
               subscriber.complete()
             }
-            if (service.failedAttempts == 6)
+            if (service.failedAttempts == MAX_FAILED_ATTEMPTS)
               alert('Es konnten eine lange Zeit keine neuen Daten vom Server geladen werden. Bitte versuch die Seite neu zu laden.')
           }
         })
@@ -136,8 +135,8 @@ export class ContentService {
           if (!service.activeSubscription || service.activeSubscription.closed) {
             service.activeSubscription = service.rest.getActivities(this.lastUpdate).subscribe({
               next(roactivities) {
-                service.lastUpdate = roactivities.lastUpdate
-                if (roactivities.activities.length > 0) {
+                if (roactivities) {
+                  service.lastUpdate = roactivities.lastUpdate
                   parseROActivities(roactivities.activities, service).then(result => {
                     service.failedAttempts = 0
                     activities = mergeArraysAndOverrideById(activities, result)
@@ -323,7 +322,7 @@ async function parseAdminROActivities(roactivites: ROActivity[], service: Conten
       game: game,
       team1: team1,
       team2: team2,
-      winner: winner ? winner : {id: -1},
+      winner: winner,
       plan: a.plan,
       timestamp: timestamp
     }

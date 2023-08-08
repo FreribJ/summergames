@@ -41,8 +41,9 @@ module.exports = async function (app) {
     })
 
     app.get('/activities', async function (req, res) {
+        const LOAD_EVERYTHING = false
         let date = new Date()
-        if (!req.query.since) {
+        if (!req.query.since || LOAD_EVERYTHING) {
             app.get('connection').query(`select * from activity where id_team1 = ${req.session.id_team} or id_team2 = ${req.session.id_team} order by timestamp desc;`, function (err, rows) {
                 if (err) {
                     res.status(500).json(err).end()
@@ -56,7 +57,10 @@ module.exports = async function (app) {
                     res.status(500).json(err).end()
                     return
                 }
-                res.json({lastUpdate: date.getTime(), activities: rows}).end()
+                if (rows.length === 0)
+                    res.status(204).end()
+                else
+                    res.json({lastUpdate: date.getTime(), activities: rows}).end()
             })
         }
     })
