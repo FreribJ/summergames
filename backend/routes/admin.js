@@ -1,3 +1,18 @@
+function formatDateNow() {
+    return formatDate(new Date());
+}
+
+function formatDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
 module.exports = async function (app) {
     app.get('/admin/guess', async function (req, res) {
         app.get('connection').query(`select id as id_team, guess from team;`, function (err, rows) {
@@ -45,7 +60,7 @@ module.exports = async function (app) {
         const id_team1 = req.body.team1Id
         const id_team2 = req.body.team2Id
         const id_winner = req.body.winnerId
-         app.get('connection').query(`update activity set id_game = ${id_game}, id_team1 = ${id_team1}, id_team2 = ${id_team2}, id_winner = ${id_winner} where id = ${id};`, function (err, rows) {
+         app.get('connection').query(`update activity set id_game = ${id_game}, id_team1 = ${id_team1}, id_team2 = ${id_team2}, id_winner = ${id_winner}, ${id_winner == null ? 'timestamp = null' : 'timestamp = \'' + formatDateNow() + '\''} where id = ${id};`, function (err, rows) {
             if (err)
                 res.status(500).json(err).end()
             res.json(rows).end()
