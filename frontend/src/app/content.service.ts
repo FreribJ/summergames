@@ -8,7 +8,7 @@ import {ROActivity, ROGuess} from "./model/restObject";
 let games: Game[] = []
 let teams: Team[] = []
 let myTeam: Team
-let activities: Activity[] = []
+let activities: Activity[]
 
 //Adjust as needed
 const REFRESH_INTERVAL = 1000 * 10
@@ -97,7 +97,11 @@ export class ContentService {
 
   getActivities(): Observable<Activity[]> {
     return new Observable<Activity[]>(subscriber => {
-        subscriber.next(activities)
+      //Wenn noch keine Daten geladen wurde, erstelle das Array
+        if (activities)
+          subscriber.next(activities)
+        else
+          activities = []
 
         this.failedAttempts = 0
         let service = this
@@ -107,6 +111,7 @@ export class ContentService {
 
         this.activeSubscription = this.rest.getActivities(this.lastUpdate).subscribe({
           next(roactivities) {
+
             if (roactivities) {
               service.lastUpdate = roactivities.lastUpdate
               parseROActivities(roactivities.activities, service).then(result => {

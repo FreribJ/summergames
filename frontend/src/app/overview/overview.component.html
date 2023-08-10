@@ -6,13 +6,13 @@
 </div>
 <div class="box">
   <h2 class="subtitle">Spiele gewonnen:</h2>
-  <h2>{{points == -1 ? 'lädt...' : gamesWon}}</h2>
+  <h2>{{gamesWon == -1 ? 'lädt...' : gamesWon}}</h2>
 </div>
 <div class="box">
   <h2 class="subtitle">Spiele verloren:</h2>
-  <h2>{{points == -1 ? 'lädt...' : gamesLost}}</h2>
+  <h2>{{gamesWon == -1 ? 'lädt...' : gamesLost}}</h2>
 </div>
 <div class="box">
   <h2 class="subtitle" style="font-weight: bold">Punkte:</h2>
-  <h2>{{points == -1 ? 'lädt...' : points}}</h2>
+  <h2>{{gamesWon == -1 ? 'lädt...' : points}}</h2>
 </div>

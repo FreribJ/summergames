@@ -46,7 +46,6 @@ import { EastereggComponent } from './eastereggs/easteregg/easteregg.component';
     RouterModule.forRoot([
       {path: 'login', component: LoginComponent, title: 'Login'},
       {path: '', component: OverviewComponent, title: 'Übersicht'},
-      // {path: 'overview', component: OverviewComponent, title: 'Übersicht'},
       {path: 'plans', component: PlanOverviewComponent, title: 'Spielpläne'},
       {path: 'activities', component: ActivityOverviewComponent, title: 'Spiele'},
       {path: 'new', component: NewActivityComponent, title: 'Neues Spiel'},
@@ -67,7 +66,7 @@ import { EastereggComponent } from './eastereggs/easteregg/easteregg.component';
           {path: 'result', component: AdminActivityResultComponent},
         ]
       },
-      {path: '*', redirectTo: ''}
+      {path: '**', redirectTo: '/', pathMatch: 'full'}
     ]),
     FormsModule,
     HttpClientModule
