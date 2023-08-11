@@ -11,8 +11,8 @@ let myTeam: Team
 let activities: Activity[]
 
 //Adjust as needed
-const REFRESH_INTERVAL = 1000 * 10
-const MAX_FAILED_ATTEMPTS = 10
+const REFRESH_INTERVAL = 1000 * 30
+const MAX_FAILED_ATTEMPTS = 2 * 5
 
 @Injectable({
   providedIn: 'root'

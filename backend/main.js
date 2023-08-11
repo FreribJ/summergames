@@ -19,7 +19,7 @@ db.connect(function (err) {
     console.log('Connected to db\n')
 })
 
-app.set('acceptentries', true)
+app.set('acceptentries', false)
 
 //Cookie parser
 const sessionParser = async function (req, res, next) {

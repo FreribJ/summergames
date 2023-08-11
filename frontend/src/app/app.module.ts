@@ -20,6 +20,7 @@ import { AdminActivityResultComponent } from './admin/admin-activity-result/admi
 import { AdminActivityDetailComponent } from './admin/admin-activity-detail/admin-activity-detail.component';
 import { EastereggsComponent } from './eastereggs/eastereggs.component';
 import { EastereggComponent } from './eastereggs/easteregg/easteregg.component';
+import { AdminStatsComponent } from './admin/admin-stats/admin-stats.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { EastereggComponent } from './eastereggs/easteregg/easteregg.component';
     AdminActivityDetailComponent,
     EastereggsComponent,
     EastereggComponent,
+    AdminStatsComponent,
   ],
   imports: [
     BrowserModule,
@@ -64,6 +66,7 @@ import { EastereggComponent } from './eastereggs/easteregg/easteregg.component';
           {path: 'teams', component: TeamOverviewComponent},
           {path: 'guessing', component: AdminGuessingComponent},
           {path: 'result', component: AdminActivityResultComponent},
+          {path: 'stats', component: AdminStatsComponent},
         ]
       },
       {path: '**', redirectTo: '/', pathMatch: 'full'}

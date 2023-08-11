@@ -100,3 +100,7 @@ group by  id_team1, id_game;
 select  id_team2, id_game, count(*)
 from activity
 group by  id_team2, id_game;
+
+select t.name
+from session s
+join team t on t.id = s.id_team;

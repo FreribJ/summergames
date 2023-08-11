@@ -15,7 +15,6 @@ function formatDate(date) {
 
 module.exports = async function (app) {
     app.get('/checkLogin', async function (req, res) {
-        console.log(req.session.easterEggs)
         res.json({success: true, admin: req.session.admin, easterEggs: req.session.easterEggs}).end();
     })
 

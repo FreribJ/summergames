@@ -16,7 +16,6 @@ export class AdminActivityOverviewComponent {
 
   constructor(private service: ContentService) {
     this.service.getAdminActivities().subscribe(result => {
-      console.log(result)
       this.allActivites = result
       this.onKeyPress()
     })
