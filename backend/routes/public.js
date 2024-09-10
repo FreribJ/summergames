@@ -42,7 +42,7 @@ module.exports = function (app) {
         }
     )
 
-    app.get('/teams', async function (req, res) {
+    app.get('/api/teams', async function (req, res) {
         app.get('connection').query('select id, name, teampartner1 as partner1, teampartner2 as partner2, clique from team order by name;', function (err, rows) {
             if (err) {
                 res.status(500).json(err).end()
