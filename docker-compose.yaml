@@ -1,0 +1,32 @@
+services:
+  database:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: admin  # Passwort für den root-User
+      MYSQL_USER: user  # Benutzername für die Datenbank
+      MYSQL_PASSWORD: password  # Passwort für den Benutzer
+      MYSQL_DATABASE: summergames  # Name der initialen Datenbank
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - "3306:3306"  # Expose MySQL port 3306 to host
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "1234:1234"
+    depends_on:
+      - database
+
+volumes:
+  mysql-data:
+    driver: local
