@@ -81,7 +81,7 @@ export class AdminActivityResultComponent {
     } else {
       this.cliqueResults.forEach(clique => {
         // @ts-ignore
-        clique.wins = this.activities.filter(a => a.plan && a.winner.clique == clique.id).length
+        clique.wins = this.activities.filter(a => a.plan && a.winner && a.winner.clique == clique.id).length
       })
       this.cliqueResults.sort((a, b) => {
         if (a.wins == b.wins)
