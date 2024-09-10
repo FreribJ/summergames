@@ -5,7 +5,7 @@ export interface AdminActivity {
   game: Game
   team1: Team
   team2: Team
-  winner: Team | { id: -1 }
+  winner?: Team
   plan: boolean
   timestamp?: Date
 }

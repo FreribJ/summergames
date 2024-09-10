@@ -17,7 +17,6 @@ export class AdminActivityOverviewComponent {
   constructor(private service: ContentService) {
     this.service.getAdminActivities().subscribe(result => {
       this.allActivites = result
-      this.activites = result
       this.onKeyPress()
     })
   }
@@ -28,28 +27,32 @@ export class AdminActivityOverviewComponent {
     return date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})
   }
 
-  onKeyPress() {
-    //TODO: evtl. mit Timeout
-    const searchPrepArray: string[] = this.search.toLowerCase().trim().split(',')
-    this.activites = this.allActivites.filter(activity => {
-      if (!this.search)
-        return true
-      for (let searchPrep of searchPrepArray) {
-        searchPrep = searchPrep.trim()
-        if (!(('Freies Spiel'.toLowerCase().includes(searchPrep) && !activity.plan) ||
-          ('Planspiel'.toLowerCase().includes(searchPrep) && activity.plan) ||
-          activity.game.name.toLowerCase().includes(searchPrep) ||
-          activity.team1.name.toLowerCase().includes(searchPrep) ||
-          activity.team2.name.toLowerCase().includes(searchPrep) ||
-          activity.team1.partner1.toLowerCase().includes(searchPrep) ||
-          activity.team1.partner2.toLowerCase().includes(searchPrep) ||
-          activity.team2.partner1.toLowerCase().includes(searchPrep) ||
-          activity.team2.partner2.toLowerCase().includes(searchPrep))) {
-          return false
-        }
-      }
-      return true
-    })
-  }
+  timeout: any
 
+  onKeyPress() {
+    if (this.timeout)
+      clearTimeout(this.timeout)
+    this.timeout = setTimeout(() => {
+      const searchPrepArray: string[] = this.search.toLowerCase().trim().split(',')
+      this.activites = this.allActivites.filter(activity => {
+        if (!this.search)
+          return true
+        for (let searchPrep of searchPrepArray) {
+          searchPrep = searchPrep.trim()
+          if (!(('Freies Spiel'.toLowerCase().includes(searchPrep) && !activity.plan) ||
+            ('Planspiel'.toLowerCase().includes(searchPrep) && activity.plan) ||
+            activity.game.name.toLowerCase().includes(searchPrep) ||
+            activity.team1.name.toLowerCase().includes(searchPrep) ||
+            activity.team2.name.toLowerCase().includes(searchPrep) ||
+            activity.team1.partner1.toLowerCase().includes(searchPrep) ||
+            activity.team1.partner2.toLowerCase().includes(searchPrep) ||
+            activity.team2.partner1.toLowerCase().includes(searchPrep) ||
+            activity.team2.partner2.toLowerCase().includes(searchPrep))) {
+            return false
+          }
+        }
+        return true
+      })
+    }, 500)
+  }
 }

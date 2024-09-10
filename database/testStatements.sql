@@ -8,6 +8,12 @@ from activity
 where id_team1 = 1
    or id_team2 = 1;
 
+select *
+from activity
+where (id_team1 = 1
+   or id_team2 = 1) and
+    (timestamp > '2023-08-08 15:22:13' or timestamp is null);
+
 select * from activity
 order by timestamp desc;
 
@@ -69,3 +75,32 @@ where id_team = ?;
 
 select * from activity;
 update activity set timestamp = '2021-07-24 12:00:00' where id = 1;
+
+#test for duplicates
+select  id_team1, id_team2, count(*)
+from activity
+group by  id_team1, id_team2;
+
+select  id_team1, id_team2, id_game, count(*)
+from activity
+group by  id_team1, id_team2, id_game;
+
+select  id_team1, count(*)
+from activity
+group by  id_team1;
+
+select  id_team2, count(*)
+from activity
+group by  id_team2;
+
+select  id_team1, id_game, count(*)
+from activity
+group by  id_team1, id_game;
+
+select  id_team2, id_game, count(*)
+from activity
+group by  id_team2, id_game;
+
+select t.name
+from session s
+join team t on t.id = s.id_team;

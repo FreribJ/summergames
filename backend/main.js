@@ -19,7 +19,7 @@ db.connect(function (err) {
     console.log('Connected to db\n')
 })
 
-app.set('acceptentries', true)
+app.set('acceptentries', false)
 
 //Cookie parser
 const sessionParser = async function (req, res, next) {
@@ -37,7 +37,7 @@ const sessionParser = async function (req, res, next) {
     if (req.cookies[config.cookieName]) {
         token = req.cookies[config.cookieName];
         console.log("Login Token: ",token)
-        app.get('connection').query(`SELECT s.id_team, t.admin, COUNT(e.id) AS eastereggs FROM session s  JOIN team t ON t.id = s.id_team LEFT JOIN easteregg e ON t.id = e.id_team where token = ${token} group by s.id_team, t.admin;`, function (err, result) {
+        app.get('connection').query(`SELECT s.id_team, t.admin, COUNT(e.id) AS easterEggs FROM session s  JOIN team t ON t.id = s.id_team LEFT JOIN easteregg e ON t.id = e.id_team where token = ${token} group by s.id_team, t.admin;`, function (err, result) {
             if (err) {
                 console.log("Failure! DB Failure:", err, "\n")
                 res

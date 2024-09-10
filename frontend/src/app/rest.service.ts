@@ -3,7 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Activity, Game, Team} from "./model/objects";
 import {AdminTeam} from "./model/adminObjects";
-import {ROActivity, ROGuess} from "./model/restObject";
+import {ROActivities, ROActivity, ROGuess} from "./model/restObject";
 
 @Injectable({
   providedIn: 'root'
@@ -38,8 +38,11 @@ export class RestService {
   getLogin(): Observable<{admin: boolean, easterEggs: number}> {
     return this.http.get<{ admin: boolean, easterEggs: number }>(`http://${this.BACKEND_IP}:${this.BACKEND_PORT}/checkLogin`, {withCredentials:true})
   }
-  getActivities(): Observable<ROActivity[]> {
-    return this.http.get<ROActivity[]>(`http://${this.BACKEND_IP}:${this.BACKEND_PORT}/activities`, {withCredentials:true})
+  getActivities(since: number): Observable<ROActivities> {
+    if (since)
+      return this.http.get<ROActivities>(`http://${this.BACKEND_IP}:${this.BACKEND_PORT}/activities?since=${since}`, {withCredentials:true})
+    else
+      return this.http.get<ROActivities>(`http://${this.BACKEND_IP}:${this.BACKEND_PORT}/activities`, {withCredentials:true})
   }
 
   getAdminActivities(): Observable<ROActivity[]> {

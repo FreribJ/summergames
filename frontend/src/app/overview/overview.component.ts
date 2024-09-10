@@ -1,6 +1,7 @@
 import {Component, OnDestroy} from '@angular/core';
 import {ContentService} from "../content.service";
 import {Team} from "../model/objects";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-overview',
@@ -15,10 +16,11 @@ export class OverviewComponent implements OnDestroy {
   gamesLost: number = -1
   points: number = -1
 
-  //TODO: check ob -1 angezeigt wird, wenn nichts da ist!
+  subscribtion: Subscription;
+
   constructor(private service: ContentService) {
     service.getTeam().then(team => this.team = team)
-    this.service.getActivities().subscribe(activities => {
+    this.subscribtion = this.service.getActivities().subscribe(activities => {
       this.gamesWon = activities.filter(activity => activity.state === "won").length
       this.gamesLost = activities.filter(activity => activity.state === "lost").length
       this.points = this.gamesWon * 2 - this.gamesLost
@@ -26,5 +28,6 @@ export class OverviewComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
+    this.subscribtion.unsubscribe()
   }
 }

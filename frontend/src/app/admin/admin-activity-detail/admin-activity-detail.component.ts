@@ -3,6 +3,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {ContentService} from "../../content.service";
 import {Game, Team} from "../../model/objects";
 import {AdminActivity} from "../../model/adminObjects";
+import {Location} from "@angular/common";
 
 @Component({
   selector: 'app-admin-activity-detail',
@@ -25,7 +26,8 @@ export class AdminActivityDetailComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
               private service: ContentService,
-              private router: Router) {
+              private router: Router,
+              private location: Location) {
     service.getTeams().then(teams => this.teams = teams)
     service.getGames().then(games => this.games = games)
   }
@@ -33,7 +35,13 @@ export class AdminActivityDetailComponent implements OnInit {
   formatTimeWithDate(date?: Date) {
     if (!date)
       return ""
-    return date.toLocaleDateString([], {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'})
+    return date.toLocaleDateString([], {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
   }
 
 
@@ -44,7 +52,8 @@ export class AdminActivityDetailComponent implements OnInit {
     else
       winnerId = this.selectedWinner == 1 ? this.selectedTeam1Id! : this.selectedTeam2Id!
     this.service.editAdminActivity(this.activity!.id, this.selectedGameId!, this.selectedTeam1Id!, this.selectedTeam2Id!, winnerId).subscribe(value => {
-      this.router.navigate(['../../'], {relativeTo: this.route, replaceUrl: true})
+      this.location.back()
+      // this.router.navigate(['../../'], {relativeTo: this.route, replaceUrl: true})
       alert('Erfolgreich gespeichert')
     })
   }
@@ -54,7 +63,8 @@ export class AdminActivityDetailComponent implements OnInit {
       this.deleteCountdown--
     } else {
       this.service.deleteAdminActivity(this.activity!.id).subscribe(value => {
-        this.router.navigate(['../../'], {relativeTo: this.route, replaceUrl: true})
+        this.location.back()
+        // this.router.navigate(['../../'], {relativeTo: this.route, replaceUrl: true})
         alert('Erfolgreich gelöscht')
       })
     }
@@ -66,8 +76,10 @@ export class AdminActivityDetailComponent implements OnInit {
         //TODO: evtl. getOneActivity()
         let subscription = this.service.getAdminActivities().subscribe(activities => {
           const activity = activities.find(a => a.id === parseInt(<string>params.get('id')))
-          if (!activity)
-            throw new Error('No activity found')
+          if (!activity) {
+            alert('activity not found')
+            return
+          }
           this.activity = activity
           this.selectedGameId = activity.game.id
           this.selectedTeam1Id = activity.team1.id

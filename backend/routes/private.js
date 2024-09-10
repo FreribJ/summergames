@@ -1,18 +1,20 @@
 function formatDateNow() {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
+    return formatDate(new Date());
+}
+
+function formatDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
 
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 
 module.exports = async function (app) {
     app.get('/checkLogin', async function (req, res) {
-
         res.json({success: true, admin: req.session.admin, easterEggs: req.session.easterEggs}).end();
     })
 
@@ -38,13 +40,28 @@ module.exports = async function (app) {
     })
 
     app.get('/activities', async function (req, res) {
-        app.get('connection').query(`select * from activity where id_team1 = ${req.session.id_team} or id_team2 = ${req.session.id_team} order by timestamp desc;`, function (err, rows) {
-            if (err) {
-                res.status(500).json(err).end()
-                return
-            }
-            res.json(rows).end()
-        })
+        const LOAD_EVERYTHING = false
+        let date = new Date()
+        if (!req.query.since || LOAD_EVERYTHING) {
+            app.get('connection').query(`select * from activity where id_team1 = ${req.session.id_team} or id_team2 = ${req.session.id_team} order by timestamp desc;`, function (err, rows) {
+                if (err) {
+                    res.status(500).json(err).end()
+                    return
+                }
+                res.json({lastUpdate: date.getTime(), activities: rows}).end()
+            })
+        } else {
+            app.get('connection').query(`select * from activity where (id_team1 = ${req.session.id_team} or id_team2 = ${req.session.id_team}) and timestamp > '${formatDate(new Date(parseInt(req.query.since)))}' order by timestamp desc;`, function (err, rows) {
+                if (err) {
+                    res.status(500).json(err).end()
+                    return
+                }
+                if (rows.length === 0)
+                    res.status(204).end()
+                else
+                    res.json({lastUpdate: date.getTime(), activities: rows}).end()
+            })
+        }
     })
 
     app.post('/activity', async function (req, res) {
@@ -56,7 +73,6 @@ module.exports = async function (app) {
         const id_team1 = req.session.id_team
         const id_team2 = req.body.opponentId
         const id_winner = req.body.state === 'won' ? req.session.id_team : req.body.opponentId
-        //TODO: add timestamp
         app.get('connection').query(`insert into activity (id_game, id_team1, id_team2, id_winner, timestamp) values (${id_game}, ${id_team1}, ${id_team2}, ${id_winner}, '${formatDateNow()}');`, function (err, result) {
             if (err) {
                 res.status(500).json(err).end()
@@ -127,8 +143,6 @@ module.exports = async function (app) {
     app.post('/easteregg', async function (req, res) {
         const id = req.body.id
         const id_team = req.session.id_team
-        // const timestamp = new Date()
-        //TODO: add timestamp
         app.get('connection').query(`insert into easteregg (id, id_team, timestamp) values (${id}, ${id_team}, '${formatDateNow()}');`, function (err, result) {
             if (err) {
                 if (err.errno == 1062)
