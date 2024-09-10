@@ -104,3 +104,9 @@ group by  id_team2, id_game;
 select t.name
 from session s
 join team t on t.id = s.id_team;
+
+select t.clique, count(*)
+    from activity
+join team t on t.id = activity.id_winner
+    where activity.id_winner is not null and activity.plan = 1
+group by t.clique
