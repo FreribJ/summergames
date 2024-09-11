@@ -18,14 +18,13 @@ create table game
     description varchar(2000)
 );
 
-drop table activity;
 create table activity
 (
     id        serial primary key,
-    id_game   bigint not null references game (id),
-    id_team1  bigint not null references team (id),
-    id_team2  bigint not null references team (id),
-    id_winner bigint references team (id),
+    id_game   bigint not null,
+    id_team1  bigint not null,
+    id_team2  bigint not null,
+    id_winner bigint,
     plan boolean not null default false,
     timestamp timestamp
 );
@@ -34,16 +33,14 @@ create table session
 (
     id      serial primary key,
     token   bigint UNIQUE,
-    id_team bigint references team (id),
+    id_team bigint,
     timestamp timestamp
 );
-alter table session add column timestamp timestamp;
 
-# TODO: add timestamp
 create table easteregg
 (
     id bigint,
-    id_team bigint references team (id),
+    id_team bigint,
     primary key (id, id_team),
     timestamp timestamp
 );
