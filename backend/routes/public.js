@@ -35,7 +35,7 @@ module.exports = function (app) {
                         return
                     }
                     if (result) {
-                        res.cookie(config.cookieName, token, {expires : new Date(253402300000000)}).json({token: token})
+                        res.cookie(config.cookieName, token, {expires: new Date(253402300000000)}).json({token: token})
                     }
                 })
             })
@@ -43,12 +43,7 @@ module.exports = function (app) {
     )
 
     app.get('/teams', async function (req, res) {
-        app.get('connection').query('select id, name, teampartner1 as partner1, teampartner2 as partner2, clique from team order by name;', function (err, rows) {
-            if (err) {
-                res.status(500).json(err).end()
-                return
-            }
-            res.json(rows).end()
-        })
+        const result = await app.get('connection').execute('select id, name, teampartner1 as partner1, teampartner2 as partner2, clique from team order by name;')
+        res.json(result).end()
     })
 }

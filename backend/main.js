@@ -5,24 +5,23 @@ const cors = require('cors')
 const config = require('./config');
 
 const mysql = require('mysql2');
-const db = mysql.createConnection({
-    host: "database",
-    user: "user",
-    password: "oaiszdiufiansdfo",
-    database: "summergames"
-});
 
-const interval = setInterval(() => {
-    db.connect(function (err) {
-        if (err) console.log("DB Connection failed, retrying in 5s: ", err.message)
-        app.set('connection', db)
+const interval = setInterval(async () => {
 
+    app.set('connection', await mysql.createConnection({
+        host: "localhost",
+        user: "user",
+        password: "oaiszdiufiansdfo",
+        database: "summergames",
+        rowsAsArray: true,
+    }))
+
+    if (app.get('connection')) {
         clearInterval(interval)
-        console.log('Connected to db\n')
-        console.log('Starting app\n')
         init()
-    })
-}, 5000)
+    }
+})
+
 
 const init = function () {
     app.set('acceptentries', false)
