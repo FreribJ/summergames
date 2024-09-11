@@ -136,6 +136,7 @@ export class ContentService {
         })
 
         clearInterval(this.activeInterval)
+      //TODO: Check if window is focused --> Only update if focused
         this.activeInterval = setInterval(() => {
           if (!service.activeSubscription || service.activeSubscription.closed) {
             service.activeSubscription = service.rest.getActivities(this.lastUpdate).subscribe({

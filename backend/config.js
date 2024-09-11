@@ -1,5 +1,6 @@
 module.exports = {
-    port: 8081,
+    port: 1234,
     cookieName: 'login-token',
-    allowedIp: 'frenkersommerspiele.ddns.net'
+    allowedIp: 'localhost',
+
 }

@@ -1,0 +1,29 @@
+services:
+  database:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: admin  # Passwort für den root-User
+      MYSQL_USER: user  # Benutzername für die Datenbank
+      MYSQL_PASSWORD: password  # Passwort für den Benutzer
+      MYSQL_DATABASE: summergames  # Name der initialen Datenbank
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "443:443"
+      - "80:80"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+    depends_on:
+      - database
+
+volumes:
+  mysql-data:
+    driver: local
