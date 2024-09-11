@@ -4,7 +4,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: admin  # Passwort für den root-User
       MYSQL_USER: user  # Benutzername für die Datenbank
-      MYSQL_PASSWORD: password  # Passwort für den Benutzer
+      MYSQL_PASSWORD: oaiszdiufiansdfo  # Passwort für den Benutzer
       MYSQL_DATABASE: summergames  # Name der initialen Datenbank
     volumes:
       - mysql-data:/var/lib/mysql

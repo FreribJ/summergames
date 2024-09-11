@@ -8,18 +8,44 @@ const mysql = require('mysql2');
 const db = mysql.createConnection({
     host: "database",
     user: "user",
-    password: "password",
+    password: "oaiszdiufiansdfo",
     database: "summergames"
 });
 
-db.connect(function (err) {
-    if (err) throw err;
-    app.set('connection', db)
+const interval = setInterval(() => {
+    db.connect(function (err) {
+        if (err) console.log("DB Connection failed, retrying in 5s: ", err.message)
+        app.set('connection', db)
 
-    console.log('Connected to db\n')
-})
+        clearInterval(interval)
+        console.log('Connected to db\n')
+        console.log('Starting app\n')
+        init()
+    })
+}, 5000)
 
-app.set('acceptentries', false)
+const init = function () {
+    app.set('acceptentries', false)
+
+    //Middlewares
+    app.use(express.json());
+    app.use(cors({
+        origin: `http://${config.allowedIp}`,
+        accessControlAllowOrigin: `http://${config.allowedIp}`,
+        credentials: true
+    }))
+    app.use(cookieParser('sommerspiele2023'))
+    app.use(sessionParser);
+
+    //Routes
+    require('./routes/public')(app)
+    require('./routes/private')(app)
+    require('./routes/admin')(app)
+
+    app.listen(config.port, function () {
+        console.log(`App started on port ${config.port}\n`);
+    });
+}
 
 //Cookie parser
 const sessionParser = async function (req, res, next) {
@@ -73,22 +99,3 @@ const sessionParser = async function (req, res, next) {
             .end()
     }
 }
-
-//Middlewares
-app.use(express.json());
-app.use(cors({
-    origin: `http://${config.allowedIp}`,
-    accessControlAllowOrigin: `http://${config.allowedIp}`,
-    credentials: true
-}))
-app.use(cookieParser('sommerspiele2023'))
-app.use(sessionParser);
-
-//Routes
-require('./routes/public')(app)
-require('./routes/private')(app)
-require('./routes/admin')(app)
-
-app.listen(config.port, function () {
-    console.log(`App started on port ${config.port}\n`);
-});
