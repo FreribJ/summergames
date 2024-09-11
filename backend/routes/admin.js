@@ -14,7 +14,7 @@ function formatDate(date) {
 }
 
 module.exports = async function (app) {
-    app.get('/admin/guess', async function (req, res) {
+    app.get('/admin/guess', function (req, res) {
         app.get('connection').query(`select id as id_team, guess from team;`, function (err, rows) {
             if (err)
                 res.status(500).json(err).end()
@@ -25,7 +25,7 @@ module.exports = async function (app) {
         })
     })
 
-    app.get('/admin/teams', async function (req, res) {
+    app.get('/admin/teams', function (req, res) {
         app.get('connection').query('select id, name, teampartner1 as partner1, teampartner2 as partner2, clique, password from team;', function (err, rows) {
             if (err)
                 res.status(500).json(err).end()
@@ -35,7 +35,7 @@ module.exports = async function (app) {
 
     //TODO: get admin eastereggs
 
-    app.get('/admin/activities', async function (req, res) {
+    app.get('/admin/activities', function (req, res) {
         app.get('connection').query(`select * from activity order by timestamp desc;`, function (err, rows) {
             if (err)
                 res.status(500).json(err).end()
@@ -43,7 +43,7 @@ module.exports = async function (app) {
         })
     })
 
-    app.get('/admin/activity/:id', async function (req, res) {
+    app.get('/admin/activity/:id', function (req, res) {
         app.get('connection').query(`select * from activity where id = ${req.params.id};`, function (err, rows) {
             if (err)
                 res.status(500).json(err).end()
@@ -54,7 +54,7 @@ module.exports = async function (app) {
         })
     })
 
-    app.put('/admin/activity/:id', async function (req, res) {
+    app.put('/admin/activity/:id', function (req, res) {
         const id = req.params.id
         const id_game = req.body.gameId
         const id_team1 = req.body.team1Id
@@ -67,7 +67,7 @@ module.exports = async function (app) {
         })
     })
 
-    app.delete('/admin/activity/:id', async function (req, res) {
+    app.delete('/admin/activity/:id', function (req, res) {
         const id = req.params.id
         app.get('connection').query(`delete from activity where id = ${id} and plan = 0;`, function (err, rows) {
             if (err)
@@ -76,11 +76,11 @@ module.exports = async function (app) {
         })
     })
 
-    app.get('/admin/acceptentries', async function (req, res) {
+    app.get('/admin/acceptentries', function (req, res) {
         res.json({acceptEntries: app.get('acceptentries')}).end()
     })
 
-    app.put('/admin/acceptentries', async function (req, res) {
+    app.put('/admin/acceptentries', function (req, res) {
         app.set('acceptentries', req.body.acceptEntries)
         res.json({acceptEntries: app.get('acceptentries')}).end()
     })

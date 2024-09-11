@@ -13,12 +13,12 @@ function formatDateNow() {
 }
 
 module.exports = function (app) {
-    app.post('/login', async function (req, res) {
+    app.post('/login', function (req, res) {
 
             const id = req.body.id
             const password = req.body.password
 
-            await app.get('connection').query(`select id from team where id = ${id} and password = '${password}'`, function (err, rows) {
+            app.get('connection').query(`select id from team where id = ${id} and password = '${password}'`, function (err, rows) {
                 if (err) {
                     res.status(500).json(err).end()
                     return
@@ -42,8 +42,13 @@ module.exports = function (app) {
         }
     )
 
-    app.get('/teams', async function (req, res) {
-        const result = await app.get('connection').execute('select id, name, teampartner1 as partner1, teampartner2 as partner2, clique from team order by name;')
-        res.json(result).end()
+    app.get('/teams', function (req, res) {
+        app.get('connection').query('select id, name, teampartner1 as partner1, teampartner2 as partner2, clique from team order by name;', function (err, rows) {
+            if (err) {
+                res.status(500).json(err).end()
+                return
+            }
+            res.json(rows).end()
+        })
     })
 }

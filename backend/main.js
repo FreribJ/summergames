@@ -9,11 +9,10 @@ const mysql = require('mysql2');
 const interval = setInterval(async () => {
 
     app.set('connection', await mysql.createConnection({
-        host: "localhost",
+        host: "database",
         user: "user",
         password: "oaiszdiufiansdfo",
         database: "summergames",
-        rowsAsArray: true,
     }))
 
     if (app.get('connection')) {

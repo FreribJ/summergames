@@ -13,12 +13,12 @@ function formatDate(date) {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 
-module.exports = async function (app) {
+module.exports = function (app) {
     app.get('/checkLogin', async function (req, res) {
         res.json({success: true, admin: req.session.admin, easterEggs: req.session.easterEggs}).end();
     })
 
-    app.get('/team', async function (req, res) {
+    app.get('/team', function (req, res) {
         app.get('connection').query(`select id, name, teampartner1 as partner1, teampartner2 as partner2, clique from team where id = ${req.session.id_team};`, function (err, rows) {
             if (err)
                 res.status(500).json(err).end()
@@ -29,7 +29,7 @@ module.exports = async function (app) {
         })
     })
 
-    app.get('/games', async function (req, res) {
+    app.get('/games', function (req, res) {
         app.get('connection').query('select * from game;', function (err, rows) {
             if (err) {
                 res.status(500).json(err).end()
@@ -39,7 +39,7 @@ module.exports = async function (app) {
         })
     })
 
-    app.get('/activities', async function (req, res) {
+    app.get('/activities', function (req, res) {
         const LOAD_EVERYTHING = false
         let date = new Date()
         if (!req.query.since || LOAD_EVERYTHING) {
@@ -64,7 +64,7 @@ module.exports = async function (app) {
         }
     })
 
-    app.post('/activity', async function (req, res) {
+    app.post('/activity', function (req, res) {
         if (!app.get('acceptentries')) {
             res.status(403).json({message: 'Entries are closed'}).end()
             return
@@ -82,7 +82,7 @@ module.exports = async function (app) {
         })
     })
 
-    app.put('/activity/:id', async function (req, res) {
+    app.put('/activity/:id', function (req, res) {
         if (!app.get('acceptentries')) {
             res.status(403).json({message: 'Entries are closed'}).end()
             return
@@ -103,7 +103,7 @@ module.exports = async function (app) {
         })
     })
 
-    app.get('/guess', async function (req, res) {
+    app.get('/guess', function (req, res) {
         app.get('connection').query(`select guess from team where id = ${req.session.id_team};`, function (err, rows) {
             if (err)
                 res.status(500).json(err).end()
@@ -114,7 +114,7 @@ module.exports = async function (app) {
         })
     })
 
-    app.put('/guess', async function (req, res) {
+    app.put('/guess', function (req, res) {
         if (!app.get('acceptentries')) {
             res.status(403).json({message: 'Entries are closed'}).end()
             return
@@ -130,7 +130,7 @@ module.exports = async function (app) {
         })
     })
 
-    app.get('/eastereggs', async function (req, res) {
+    app.get('/eastereggs', function (req, res) {
         app.get('connection').query(`select id from easteregg where id_team = ${req.session.id_team};`, function (err, rows) {
             if (err) {
                 res.status(500).json(err).end()
@@ -140,7 +140,7 @@ module.exports = async function (app) {
         })
     })
 
-    app.post('/easteregg', async function (req, res) {
+    app.post('/easteregg', function (req, res) {
         const id = req.body.id
         const id_team = req.session.id_team
         app.get('connection').query(`insert into easteregg (id, id_team, timestamp) values (${id}, ${id_team}, '${formatDateNow()}');`, function (err, result) {
