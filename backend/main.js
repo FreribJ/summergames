@@ -6,20 +6,24 @@ const config = require('./config');
 
 const mysql = require('mysql2');
 
-const interval = setInterval(async () => {
-
-    app.set('connection', await mysql.createConnection({
+console.log("Waiting 10 seconds")
+setTimeout(() => {
+    console.log("Connecting to database")
+    let con = mysql.createConnection({
         host: "database",
         user: "user",
         password: "oaiszdiufiansdfo",
         database: "summergames",
-    }))
+    })
 
-    if (app.get('connection')) {
-        clearInterval(interval)
+    app.set('connection', con)
+
+    console.log("Waiting 5 seconds")
+    setTimeout(() => {
+        console.log("Starting Server")
         init()
-    }
-})
+    }, 5000)
+}, 10000);
 
 
 const init = function () {
