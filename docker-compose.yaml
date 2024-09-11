@@ -8,8 +8,6 @@ services:
       MYSQL_DATABASE: summergames  # Name der initialen Datenbank
     volumes:
       - mysql-data:/var/lib/mysql
-    ports:
-      - "3306:3306"  # Expose MySQL port 3306 to host
 
   frontend:
     build:
@@ -23,8 +21,6 @@ services:
   backend:
     build:
       context: ./backend
-    ports:
-      - "1234:1234"
     depends_on:
       - database
 
