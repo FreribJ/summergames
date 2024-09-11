@@ -7,6 +7,8 @@ WORKDIR /usr/src/app
 # Kopiere den Rest der Anwendung in das Arbeitsverzeichnis
 COPY . .
 
+RUN npm install
+
 # Der Standard-Port für die Anwendung
 EXPOSE 1234
 
