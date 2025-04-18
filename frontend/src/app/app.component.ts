@@ -8,7 +8,7 @@ import {ActivatedRoute, Router} from "@angular/router";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = `Frenker Sommerspiele ${YEAR}`;
+  title = `Frenker Sommerspiele 2025`;
 
   menuOpen = false;
   newOpen = false
@@ -59,6 +59,4 @@ export class AppComponent {
       }
     })
   }
-
-  protected readonly YEAR = YEAR;
 }
