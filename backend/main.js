@@ -32,8 +32,7 @@ const init = function () {
     //Middlewares
     app.use(express.json());
     app.use(cors({
-        origin: `http://${config.allowedIp}`,
-        accessControlAllowOrigin: `http://${config.allowedIp}`,
+        origin: `${config.allowedIp}`,
         credentials: true
     }))
     app.use(cookieParser('sommerspiele2023'))
