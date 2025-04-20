@@ -10,6 +10,7 @@ services:
       - mysql-data:/var/lib/mysql
     ports:
       - "3306:3306"
+    restart: unless-stopped
 
   frontend:
     build:
@@ -18,12 +19,20 @@ services:
       - "1313:80"
     depends_on:
       - backend
+    restart: unless-stopped
 
   backend:
     build:
       context: ./backend
     depends_on:
       - database
+    restart: unless-stopped
+
+  adminer:
+    image: adminer
+    ports:
+      - "3307:8080"
+    restart: unless-stopped
 
 volumes:
   mysql-data:
