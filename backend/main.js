@@ -10,9 +10,9 @@ console.log("Waiting 10 seconds")
 setTimeout(() => {
     console.log("Connecting to database")
     let con = mysql.createConnection({
-        host: "database",
-        user: "user",
-        password: "oaiszdiufiansdfo",
+        host: "localhost",
+        user: "root",
+        password: "password",
         database: "summergames",
     })
 
@@ -35,7 +35,7 @@ const init = function () {
         origin: config.allowedIp,
         credentials: true
     }))
-    app.use(cookieParser('sommerspiele2023'))
+    app.use(cookieParser('summergames'))
     app.use(sessionParser);
 
     //Routes

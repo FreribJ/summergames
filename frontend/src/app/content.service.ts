@@ -4,6 +4,7 @@ import {Observable, Subscription} from "rxjs";
 import {RestService} from "./rest.service";
 import {AdminActivity, AdminGuess, AdminTeam} from "./model/adminObjects";
 import {ROActivity, ROGuess} from "./model/restObject";
+import {Router} from "@angular/router";
 
 let games: Game[] = []
 let teams: Team[] = []
@@ -22,7 +23,23 @@ export class ContentService {
   activeSubscription?: Subscription
   activeInterval?: number
 
-  constructor(private rest: RestService) {
+  constructor(private rest: RestService, private router: Router) {
+  }
+
+  logout(): void {
+    this.deleteAllCookies()
+  }
+
+  private deleteAllCookies() {
+    const cookies = document.cookie.split(";");
+
+    for (const cookie of cookies) {
+      const eqPos = cookie.indexOf("=");
+      const name = eqPos > -1 ? cookie.substring(0, eqPos) : cookie;
+
+      // Cookie für alle Pfade löschen
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+    }
   }
 
   getGames(): Promise<Game[]> {

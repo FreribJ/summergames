@@ -4,13 +4,14 @@ import {Observable} from "rxjs";
 import {Activity, Game, Team} from "./model/objects";
 import {AdminTeam} from "./model/adminObjects";
 import {ROActivities, ROActivity, ROGuess} from "./model/restObject";
+import {environment} from "../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class RestService {
 
-  BACKEND_IP = `${window.location.origin}/api`
+  BACKEND_IP = `${environment.production ? window.location.origin : environment.api}${environment.apiPrefix}`;
 
   constructor(private http: HttpClient) { }
 

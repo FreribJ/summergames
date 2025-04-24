@@ -23,25 +23,31 @@ export class AppComponent {
     this.checkLogin()
   }
 
+  logout(): void {
+    this.service.logout()
+    this.router.navigate(['login'])
+    this.loginSuccess = false
+    this.menuItems = [
+      {name: 'Login', link: 'login', icon: 'fa-unlock-keyhole'}
+    ]
+  }
+
   checkLogin() {
     this.service.checkLogin().subscribe(value => {
       this.loginSuccess = true
+      this.menuItems = [
+        { name: 'Übersicht', link: '', icon: 'fa-house'} ,
+        { name: 'Spielplan', link: 'plans', icon: 'fa-table-list'} ,
+        { name: 'Gespielte Spiele', link: 'activities', icon: 'fa-list-check'} ,
+        { name: 'Ratespiel', link: 'guessing', icon: 'fa-question'} ,
+        { name: 'Einstellungen', link: 'settings', icon: 'fa-gear'} ,
+      ]
       if (value.admin) {
-        this.menuItems = [
-          {name: 'Übersicht', link: '', icon: 'fa-house'},
-          {name: 'Spielplan', link: 'plans', icon: 'fa-table-list'},
-          {name: 'Gespielte Spiele', link: 'activities', icon: 'fa-list-check'},
-          {name: 'Ratespiel', link: 'guessing', icon: 'fa-question'},
-          {name: 'Admin-Bereich', link: 'admin', icon: 'fa-triangle-exclamation'},
-        ]
-      } else {
-        this.menuItems = [
-          {name: 'Übersicht', link: '', icon: 'fa-house'},
-          {name: 'Spielplan', link: 'plans', icon: 'fa-table-list'},
-          {name: 'Gespielte Spiele', link: 'activities', icon: 'fa-list-check'},
-          {name: 'Ratespiel', link: 'guessing', icon: 'fa-question'},
-        ]
+        this.menuItems.push(
+          { name: 'Admin-Bereich', link: 'admin', icon: 'fa-triangle-exclamation' }
+        );
       }
+
       if (value.easterEggs > 0) {
         this.menuItems.push({name: 'Easter Eggs', link: 'eastereggs', icon: 'fa-egg'})
       }
@@ -54,7 +60,7 @@ export class AppComponent {
         this.returnAfterLogin = location.pathname
         this.router.navigate(['login'])
         this.menuItems = [
-          {name: 'Login', link: 'login', icon: ''}
+          {name: 'Login', link: 'login', icon: 'fa-unlock-keyhole'}
         ]
       }
     })
