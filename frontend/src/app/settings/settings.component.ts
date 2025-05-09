@@ -41,14 +41,22 @@ export class SettingsComponent {
       this.teamnameInvalid = true
       return
     }
-    if (this.teammate1.trim().length < 4) {
+    if (this.teammate1.trim().length < 3) {
       this.teammate1Invalid = true
       return
     }
-    if (this.teammate2.trim().length < 4) {
+    if (this.teammate2.trim().length < 3) {
       this.teammate2Invalid = true
       return
     }
+
+    this.isLoading = true;
+    this.service.updateTeam(this.teamname, this.teammate1, this.teammate2).subscribe(value => {
+      this.isLoading = false;
+    }, error => {
+      window.alert("Fehler beim Speichern")
+      this.isLoading = false;
+    });
 
   }
 

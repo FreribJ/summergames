@@ -154,4 +154,18 @@ module.exports = function (app) {
             res.json(result).end()
         })
     })
+
+    app.put('/team/update', function (req, res) {
+        const teamname = req.body.updatedTeamName
+        const teammate1 = req.body.updatedTeamMate1
+        const teammate2 = req.body.updatedTeamMate2
+        const id_team = req.session.id_team
+        app.get('connection').query(`update  team set name = "${teamname}", teampartner1 = "${teammate1}", teampartner2 = "${teammate2}" where id = ${id_team};`, function (err, result) {
+            if (err) {
+                res.status(500).json(err).end()
+                return
+            }
+            res.json(result).end()
+        })
+    })
 }

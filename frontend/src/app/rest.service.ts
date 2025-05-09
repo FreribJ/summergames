@@ -91,5 +91,13 @@ export class RestService {
   putAcceptEntries(acceptEntries: boolean)  {
     return this.http.put<{acceptEntries: boolean}>(`${this.BACKEND_IP}/admin/acceptentries`, {acceptEntries}, {withCredentials:true})
   }
+
+  postTeamCreate(newTeamName: string , password: string): Observable<any> {
+    return this.http.post<any>(`${this.BACKEND_IP}/team/create`, {newTeamName, password})
+  }
+
+  putTeamUpdate(updatedTeamName: string , updatedTeamMate1: string , updatedTeamMate2: string) {
+    return this.http.put<any>(`${this.BACKEND_IP}/team/update`, {updatedTeamName, updatedTeamMate1, updatedTeamMate2}, {withCredentials:true})
+  }
 }
 

@@ -206,6 +206,21 @@ export class ContentService {
     return this.rest.postLogin(idTeam, password)
   }
 
+  updateTeam(updatedTeamName: string, updatedTeamMate1: string, updatedTeamMate2: string) {
+    return new Observable<boolean>(subscriber => {
+      this.rest.putTeamUpdate(updatedTeamName, updatedTeamMate1, updatedTeamMate2).subscribe(value => {
+        myTeam.name = updatedTeamName;
+        myTeam.partner1 = updatedTeamMate1;
+        myTeam.partner2 = updatedTeamMate2;
+        subscriber.next(true);
+      }, error => subscriber.next(false));
+    })
+  }
+
+  createTeam(newTeamName: string , password: string) {
+    return this.rest.postTeamCreate(newTeamName, password);
+  }
+
   newActivity(gameId: number, opponentId: number, state: 'won' | 'lost') {
     return this.rest.postActivity(gameId, opponentId, state)
   }

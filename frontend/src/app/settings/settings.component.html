@@ -3,13 +3,14 @@
 
   <label class="label">Teamname</label>
   <div class="control has-icons-left">
-    <input class="input {{teamnameInvalid ? 'is-danger' : ''}}" type="text" placeholder="Teamname" [(ngModel)]="teamname">
+    <input class="input {{teamnameInvalid ? 'is-danger' : ''}}" type="text" placeholder="Teamname"
+           [(ngModel)]="teamname">
     <span class="icon is-small is-left">
       <i class="fas fa-user-group"></i>
     </span>
   </div>
 
-  <label class="label">Teilnehmer 2</label>
+  <label class="label">Teilnehmer 1</label>
   <div class="control has-icons-left">
     <input class="input {{teammate1Invalid ? 'is-danger' : ''}}" type="text" placeholder="Name" [(ngModel)]="teammate1">
     <span class="icon is-small is-left">
@@ -30,6 +31,14 @@
 
 <div class="field">
   <div class="control">
-    <button class="button is-success is-fullwidth {{isLoading ? 'is-loading' : ''}}" (click)="onLogoutClick()">Logout</button>
+    <button class="button is-success is-fullwidth {{isLoading ? 'is-loading' : ''}}" (click)="saveTeam()">Speichern
+    </button>
+  </div>
+</div>
+
+<div class="field">
+  <div class="control">
+    <button class="button is-danger is-fullwidth {{isLoading ? 'is-loading' : ''}}" (click)="onLogoutClick()">Logout
+    </button>
   </div>
 </div>
