@@ -10,9 +10,9 @@ console.log("Waiting 10 seconds")
 setTimeout(() => {
     console.log("Connecting to database")
     let con = mysql.createConnection({
-        host: "localhost",
-        user: "root",
-        password: "password",
+        host: "database",
+        user: "user",
+        password: "oaiszdiufiansdfo",
         database: "summergames",
     })
 
