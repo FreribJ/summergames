@@ -114,7 +114,7 @@ export class ContentService {
 
   getActivities(): Observable<Activity[]> {
     return new Observable<Activity[]>(subscriber => {
-      //Wenn noch keine Daten geladen wurde, erstelle das Array
+        //Wenn noch keine Daten geladen wurde, erstelle das Array
         if (activities)
           subscriber.next(activities)
         else
@@ -153,7 +153,8 @@ export class ContentService {
         })
 
         clearInterval(this.activeInterval)
-      //TODO: Check if window is focused --> Only update if focused
+        //TODO: Check if window is focused --> Only update if focused
+        // @ts-ignore
         this.activeInterval = setInterval(() => {
           if (!service.activeSubscription || service.activeSubscription.closed) {
             service.activeSubscription = service.rest.getActivities(this.lastUpdate).subscribe({
@@ -217,7 +218,7 @@ export class ContentService {
     })
   }
 
-  createTeam(newTeamName: string , password: string) {
+  createTeam(newTeamName: string, password: string) {
     return this.rest.postTeamCreate(newTeamName, password);
   }
 
@@ -259,6 +260,10 @@ export class ContentService {
 
   getFoundEastereggs() {
     return this.rest.getFoundEasterEggs()
+  }
+
+  getAdminFoundEastereggs() {
+    return this.rest.getAllFoundEasterEggs()
   }
 
   postEasteregg(id: number) {

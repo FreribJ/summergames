@@ -23,3 +23,8 @@ export interface AdminGuess {
   team: Team
   guess: number
 }
+
+export interface AdminEasterEgg {
+  id: number
+  id_team: number
+}

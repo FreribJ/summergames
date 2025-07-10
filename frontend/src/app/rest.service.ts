@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Activity, Game, Team} from "./model/objects";
-import {AdminTeam} from "./model/adminObjects";
+import {AdminEasterEgg, AdminTeam} from "./model/adminObjects";
 import {ROActivities, ROActivity, ROGuess} from "./model/restObject";
 import {environment} from "../environments/environment";
 
@@ -82,7 +82,7 @@ export class RestService {
   }
 
   getAllFoundEasterEggs() {
-    return this.http.get<{id: number, }[]>(`${this.BACKEND_IP}/admin/eastereggs`, {withCredentials:true})
+    return this.http.get<AdminEasterEgg[]>(`${this.BACKEND_IP}/admin/eastereggs`, {withCredentials:true})
   }
   postEasterEgg(id: number) {
     return this.http.post(`${this.BACKEND_IP}/easteregg`, {id}, {withCredentials:true})

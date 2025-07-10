@@ -33,7 +33,13 @@ module.exports = async function (app) {
         })
     })
 
-    //TODO: get admin eastereggs
+    app.get('/admin/eastereggs', function (req, res) {
+        app.get('connection').query('select id, id_team from easteregg;', function (err, rows) {
+            if (err)
+                res.status(500).json(err).end()
+            res.json(rows).end()
+        })
+    })
 
     app.get('/admin/activities', function (req, res) {
         app.get('connection').query(`select * from activity order by timestamp desc;`, function (err, rows) {
