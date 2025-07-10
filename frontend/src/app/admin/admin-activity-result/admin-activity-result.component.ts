@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {ContentService} from "../../content.service";
 import {Activity, Team} from "../../model/objects";
 import {AdminActivity} from "../../model/adminObjects";
@@ -6,7 +6,11 @@ import {AdminActivity} from "../../model/adminObjects";
 interface TeamResult extends Team {
   wins: number
   loses: number
-  points: number
+  winRate: number
+}
+
+interface EasterEggsResult extends Team {
+  found: number
 }
 
 interface CliqueResult {
@@ -32,7 +36,9 @@ export class AdminActivityResultComponent {
   cliqueResults: CliqueResult[] = [
     {id: 'jannes', name: 'Jannes Clique', wins: 0},
     {id: 'mattes', name: 'Mattes Clique', wins: 0}
-    ]
+  ]
+
+  easterEggResults: EasterEggsResult[] = [];
 
   acceptEntries?: boolean
 
@@ -47,9 +53,10 @@ export class AdminActivityResultComponent {
     })
     service.getTeams().then(value => {
       value.forEach(team => {
-        this.teamResults.push({...team, wins: 0, loses: 0, points: 0})
+        this.teamResults.push({...team, wins: 0, loses: 0, winRate: 0})
       })
     })
+    service.getFoundEastereggs()
   }
 
   onToggleEntriesClick() {
@@ -64,32 +71,38 @@ export class AdminActivityResultComponent {
     }
   }
 
-  startEvaluation(evt: 'clique' |'team') {
-    if (evt == "team") {
-      this.teamResults.forEach(team => {
-        team.wins = this.activities.filter(a => a.winner && a.winner.id == team.id).length
-        team.loses = this.activities.filter(a => a.winner && a.winner.id != team.id && (a.team1.id == team.id || a.team2.id == team.id)).length
-        team.points = team.wins * 2 - team.loses
-      })
-      this.teamResults.sort((a, b) => {
-        if (a.points == b.points)
-          return 0
-        if (a.points < b.points)
-          return 1
-        return -1
-      })
-    } else {
-      this.cliqueResults.forEach(clique => {
-        // @ts-ignore
-        clique.wins = this.activities.filter(a => a.plan && a.winner && a.winner.clique == clique.id).length
-      })
-      this.cliqueResults.sort((a, b) => {
-        if (a.wins == b.wins)
-          return 0
-        if (a.wins < b.wins)
-          return 1
-        return -1
-      })
+  startEvaluation(evt: 'clique' | 'team' | 'eastereggs') {
+    switch (evt) {
+      case "team":
+        this.teamResults.forEach(team => {
+          team.wins = this.activities.filter(a => a.winner && a.winner.id == team.id).length
+          team.loses = this.activities.filter(a => a.winner && a.winner.id != team.id && (a.team1.id == team.id || a.team2.id == team.id)).length
+          team.winRate = !team.wins ? 0 : !team.loses ? 1 : team.wins / (team.wins + team.loses)
+        })
+        this.teamResults.sort((a, b) => {
+          if (a.winRate == b.winRate)
+            return 0
+          if (a.winRate < b.winRate)
+            return 1
+          return -1
+        })
+        break;
+      case "clique":
+        this.cliqueResults.forEach(clique => {
+          // @ts-ignore
+          clique.wins = this.activities.filter(a => a.plan && a.winner && a.winner.clique == clique.id).length
+        })
+        this.cliqueResults.sort((a, b) => {
+          if (a.wins == b.wins)
+            return 0
+          if (a.wins < b.wins)
+            return 1
+          return -1
+        })
+        break;
+      case "eastereggs":
+        this.auswertung = "Die Auswertung der Eastereggs ist noch nicht implementiert."
+        break;
     }
   }
 }

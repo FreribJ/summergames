@@ -12,7 +12,7 @@
 
   <label class="label">Teilnehmer 1</label>
   <div class="control has-icons-left">
-    <input class="input {{teammate1Invalid ? 'is-danger' : ''}}" type="text" placeholder="Name" [(ngModel)]="teammate1">
+    <input class="input {{teammate1Invalid ? 'is-danger' : ''}}" type="text" placeholder="Name" [(ngModel)]="teammate1" [disabled]="true">
     <span class="icon is-small is-left">
       <i class="fas fa-user"></i>
     </span>
@@ -21,7 +21,7 @@
 
   <label class="label">Teilnehmer 2</label>
   <div class="control has-icons-left">
-    <input class="input {{teammate2Invalid ? 'is-danger' : ''}}" type="text" placeholder="Name" [(ngModel)]="teammate2">
+    <input class="input {{teammate2Invalid ? 'is-danger' : ''}}" type="text" placeholder="Name" [(ngModel)]="teammate2" [disabled]="true">
     <span class="icon is-small is-left">
       <i class="fas fa-user"></i>
     </span>
@@ -38,7 +38,7 @@
 
 <div class="field">
   <div class="control">
-    <button class="button is-danger is-fullwidth {{isLoading ? 'is-loading' : ''}}" (click)="onLogoutClick()">Logout
+    <button class="button is-danger is-fullwidth" (click)="onLogoutClick()">Logout
     </button>
   </div>
 </div>

@@ -18,3 +18,8 @@ export interface AdminGuess {
   team: Team
   guess: number
 }
+
+export interface AdminGuess {
+  team: Team
+  guess: number
+}

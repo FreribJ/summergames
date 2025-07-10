@@ -13,6 +13,6 @@
   <h2>{{gamesWon == -1 ? 'lädt...' : gamesLost}}</h2>
 </div>
 <div class="box">
-  <h2 class="subtitle" style="font-weight: bold">Punkte:</h2>
-  <h2>{{gamesWon == -1 ? 'lädt...' : points}}</h2>
+  <h2 class="subtitle" style="font-weight: bold">Sieges-Quote:</h2>
+  <h2>{{gamesWon == -1 ? 'lädt...' : winRate | percent }}</h2>
 </div>

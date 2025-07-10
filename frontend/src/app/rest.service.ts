@@ -80,6 +80,10 @@ export class RestService {
   getFoundEasterEggs() {
     return this.http.get<{id: number}[]>(`${this.BACKEND_IP}/eastereggs`, {withCredentials:true})
   }
+
+  getAllFoundEasterEggs() {
+    return this.http.get<{id: number, }[]>(`${this.BACKEND_IP}/admin/eastereggs`, {withCredentials:true})
+  }
   postEasterEgg(id: number) {
     return this.http.post(`${this.BACKEND_IP}/easteregg`, {id}, {withCredentials:true})
   }

@@ -11,6 +11,7 @@
       <select [disabled]="!!acceptEntries" [(ngModel)]="auswertung" (ngModelChange)="startEvaluation($event)">
         <option value="clique">Beste Clique</option>
         <option value="team">Bestes Team</option>
+        <option value="eastereggs">Meiste Eastereggs</option>
       </select>
       <span class="icon is-small is-left">
         <i class="fas fa-square-poll-vertical"></i>
@@ -24,7 +25,7 @@
     <h2 class="subtitle">{{i + 1}}. {{t.name}}</h2>
     <p>Spiele gewonnen: {{t.wins}}</p>
     <p>Spiele verloren: {{t.loses}}</p>
-    <p style="font-weight: bold">Punkte: {{t.points}}</p>
+    <p style="font-weight: bold">Punkte: {{t.winRate}}</p>
   </div>
 </div>
 

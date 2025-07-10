@@ -14,7 +14,7 @@ export class OverviewComponent implements OnDestroy {
 
   gamesWon: number = -1
   gamesLost: number = -1
-  points: number = -1
+  winRate: number = -1
 
   subscribtion: Subscription;
 
@@ -23,7 +23,7 @@ export class OverviewComponent implements OnDestroy {
     this.subscribtion = this.service.getActivities().subscribe(activities => {
       this.gamesWon = activities.filter(activity => activity.state === "won").length
       this.gamesLost = activities.filter(activity => activity.state === "lost").length
-      this.points = this.gamesWon * 2 - this.gamesLost
+      this.winRate = !this.gamesWon ? 0 : !this.gamesLost ? 1 : this.gamesWon / (this.gamesWon + this.gamesLost)
       })
   }
 
