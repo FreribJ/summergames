@@ -134,5 +134,12 @@ export class AdminActivityResultComponent {
     this.easterEggResults.forEach(team => {
       team.found = this.foundEasterEggs.filter(egg => egg.id_team === team.id).length
     })
+    this.easterEggResults.sort((a, b) => {
+        if (a.found == b.found)
+            return 0
+        if (a.found < b.found)
+            return 1
+        return -1
+        })
   }
 }

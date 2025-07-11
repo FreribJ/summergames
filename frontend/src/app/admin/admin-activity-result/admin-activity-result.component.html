@@ -9,8 +9,8 @@
   <div class="control has-icons-left">
     <div class="select is-fullwidth">
       <select [disabled]="acceptEntries || loadingCount() > 0" [(ngModel)]="auswertung">
-        <option [value]="Evaluation.TEAM">Beste Clique</option>
-        <option [value]="Evaluation.CLIQUE">Bestes Team</option>
+        <option [value]="Evaluation.CLIQUE">Beste Clique</option>
+        <option [value]="Evaluation.TEAM">Bestes Team</option>
         <option [value]="Evaluation.EASTEREGGS">Meisten Eastereggs</option>
       </select>
       <span class="icon is-small is-left">
