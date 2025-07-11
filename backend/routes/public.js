@@ -29,7 +29,7 @@ module.exports = function (app) {
                 }
 
                 if (!rows[0].passwordSet) {
-                    app.get('connection').query(`update team set password = ${password} where id = ${id};`, function (err, rows) {
+                    app.get('connection').query(`update team set password = '${password}' where id = ${id};`, function (err, rows) {
                         if (err) {
                             res.status(500).json(err).end()
                         }
@@ -51,7 +51,7 @@ module.exports = function (app) {
     )
 
     app.get('/teams', function (req, res) {
-        app.get('connection').query('select id, name, teampartner1 as partner1, teampartner2 as partner2, clique, CASE WHEN password = "UNSET" THEN true ELSE false END as passwordSet from team order by name;', function (err, rows) {
+        app.get('connection').query('select id, name, teampartner1 as partner1, teampartner2 as partner2, clique, CASE WHEN password = "UNSET" THEN false ELSE true END as passwordSet from team order by name;', function (err, rows) {
             if (err) {
                 res.status(500).json(err).end()
                 return

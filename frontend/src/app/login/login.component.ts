@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import {ActivatedRoute, Router, RouterModule} from "@angular/router";
+import {Router} from "@angular/router";
 import {ContentService} from "../content.service";
-import {Observable, Subscriber} from "rxjs";
 import {Team} from "../model/objects";
 import {AppComponent} from "../app.component";
 
@@ -13,7 +12,8 @@ import {AppComponent} from "../app.component";
 export class LoginComponent {
 
   teams: Team[] = []
-  selectedTeam?: Team
+  selectedTeamId?: number
+  selectedTeam?: Team;
   password: string = ""
   passwordWrong = false
 
@@ -37,8 +37,8 @@ export class LoginComponent {
 
   onLoginClick() {
     this.isLoading = true
-    if (this.selectedTeam && this.password.trim().length){
-      this.service.login(this.selectedTeam.id, this.password).subscribe(value => {
+    if (this.selectedTeamId && this.password.trim().length){
+      this.service.login(this.selectedTeamId, this.password).subscribe(value => {
         this.router.navigate([''],  {replaceUrl: true})
         this.app.checkLogin()
         //TODO: evtl. ContentService zurücksetzen
@@ -53,5 +53,9 @@ export class LoginComponent {
           this.isLoading = false
       })
     }
+  }
+
+  teamSelected() {
+    this.selectedTeam = this.teams.find(t => t.id == this.selectedTeamId)
   }
 }
