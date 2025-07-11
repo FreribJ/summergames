@@ -25,11 +25,8 @@ export class AppComponent {
 
   logout(): void {
     this.service.logout()
-    this.router.navigate(['login'])
-    this.loginSuccess = false
-    this.menuItems = [
-      {name: 'Login', link: 'login', icon: 'fa-unlock-keyhole'}
-    ]
+    void this.router.navigate(['login'])
+    window.location.reload()
   }
 
   checkLogin() {
