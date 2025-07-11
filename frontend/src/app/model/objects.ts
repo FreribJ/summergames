@@ -13,6 +13,7 @@ export interface Team {
   partner1: string
   partner2: string
   clique: 'jannes' | 'mattes'
+  passwordSet: boolean
 }
 
 export interface Game {

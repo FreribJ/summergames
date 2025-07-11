@@ -13,7 +13,7 @@ import {AppComponent} from "../app.component";
 export class LoginComponent {
 
   teams: Team[] = []
-  selectedTeamId?: number
+  selectedTeam?: Team
   password: string = ""
   passwordWrong = false
 
@@ -37,8 +37,8 @@ export class LoginComponent {
 
   onLoginClick() {
     this.isLoading = true
-    if (this.selectedTeamId){
-      this.service.login(this.selectedTeamId, this.password).subscribe(value => {
+    if (this.selectedTeam && this.password.trim().length){
+      this.service.login(this.selectedTeam.id, this.password).subscribe(value => {
         this.router.navigate([''],  {replaceUrl: true})
         this.app.checkLogin()
         //TODO: evtl. ContentService zurücksetzen

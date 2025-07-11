@@ -18,7 +18,7 @@ module.exports = function (app) {
             const id = req.body.id
             const password = req.body.password
 
-            app.get('connection').query(`select id from team where id = ${id} and password = '${password}'`, function (err, rows) {
+            app.get('connection').query(`select id, CASE WHEN password = "UNSET" THEN false ELSE true END as passwordSet from team where id = ${id} and password in ('${password}', 'UNSET')`, function (err, rows) {
                 if (err) {
                     res.status(500).json(err).end()
                     return
@@ -28,7 +28,15 @@ module.exports = function (app) {
                     return
                 }
 
-                let token = Math.floor(Math.random() * 1000000)
+                if (!rows[0].passwordSet) {
+                    app.get('connection').query(`update team set password = ${password} where id = ${id};`, function (err, rows) {
+                        if (err) {
+                            res.status(500).json(err).end()
+                        }
+                    })
+                }
+
+                const token = Math.floor(Math.random() * 1000000)
                 app.get('connection').query(`insert into session (token, id_team, timestamp) VALUES (${token}, ${id}, '${formatDateNow()}');`, function (err, result) {
                     if (err) {
                         res.status(500).json(err).end()
@@ -43,7 +51,7 @@ module.exports = function (app) {
     )
 
     app.get('/teams', function (req, res) {
-        app.get('connection').query('select id, name, teampartner1 as partner1, teampartner2 as partner2, clique from team order by name;', function (err, rows) {
+        app.get('connection').query('select id, name, teampartner1 as partner1, teampartner2 as partner2, clique, CASE WHEN password = "UNSET" THEN true ELSE false END as passwordSet from team order by name;', function (err, rows) {
             if (err) {
                 res.status(500).json(err).end()
                 return
