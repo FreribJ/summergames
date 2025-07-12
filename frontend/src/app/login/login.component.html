@@ -4,7 +4,7 @@
   <div class="control has-icons-left">
     <div class="select is-fullwidth">
       <select [(ngModel)]="selectedTeamId" (ngModelChange)="teamSelected()">
-        <option *ngFor="let t of teams" [value]="t.id">{{t.name}}</option>
+        <option *ngFor="let t of teams" [value]="t.id">{{ t.name }}</option>
       </select>
       <span class="icon is-small is-left">
         <i class="fas fa-user-group"></i>
@@ -15,17 +15,28 @@
 
 
 <div class="field">
-  <label class="label">Passwort{{selectedTeam?.passwordSet == false ? " festlegen" : ""}}</label>
-  <div class="control has-icons-left">
-    <input class="input {{passwordWrong ? 'is-danger' : ''}}" type="password" [placeholder]="selectedTeam?.passwordSet == false ? 'Neues Passwort festlegen' : 'Passwort'" (keyup)="onEnterClick($event)" [(ngModel)]="password">
+  <label class="label">Passwort{{ selectedTeam?.passwordSet == false ? " festlegen" : "" }}</label>
+  <div class="control has-icons-left has-icons-right">
+    <input class="input {{passwordWrong ? 'is-danger' : ''}}" [type]="viewPassword ? 'text' : 'password'"
+           [placeholder]="selectedTeam?.passwordSet == false ? 'Neues Passwort festlegen' : 'Passwort'"
+           (keyup)="onEnterClick($event)" [(ngModel)]="password">
     <span class="icon is-small is-left">
       <i class="fas fa-lock"></i>
     </span>
   </div>
+
+  <label (click)="showPassword()">
+    <a>
+      {{ viewPassword ? 'Passwort verstecken' : 'Passwort anzeigen' }}
+
+    </a>
+  </label>
 </div>
 
 <div class="field">
   <div class="control">
-    <button class="button is-success is-fullwidth {{isLoading ? 'is-loading' : ''}}" (click)="onLoginClick()" [disabled]="!password || !password.trim() || !selectedTeamId">Login</button>
+    <button class="button is-success is-fullwidth {{isLoading ? 'is-loading' : ''}}" (click)="onLoginClick()"
+            [disabled]="!password || !password.trim() || !selectedTeamId">Login
+    </button>
   </div>
 </div>

@@ -18,6 +18,7 @@ export class LoginComponent {
   passwordWrong = false
 
   isLoading = false
+  viewPassword: boolean = false;
 
   constructor(private router: Router,
               private service: ContentService,
@@ -57,5 +58,9 @@ export class LoginComponent {
 
   teamSelected() {
     this.selectedTeam = this.teams.find(t => t.id == this.selectedTeamId)
+  }
+
+  showPassword() {
+    this.viewPassword = !this.viewPassword;
   }
 }
